@@ -1,5 +1,5 @@
 ---
-title: "final-code"
+title: "Take Home Final"
 format: 
   html: 
     toc: true
@@ -101,8 +101,7 @@ mound_I_qq <- ggplot(data = mound_I, aes(sample = seed_count)) +
   stat_qq_line(linewidth = 1, color = "blue") +
   stat_qq()
 
-# put plots together using 'patchwork'
-(mound_B_hist + mound_B_qq) / (mound_D_hist + mound_D_qq) / (mound_E_hist + mound_E_qq) / (mound_I_hist + mound_I_qq)
+
 ```
 
 
@@ -126,13 +125,18 @@ Prior to our analysis, we checked assumptions for analysis of variance. We teste
 kruskal.test(seed_count ~ microhabitat, data = kangaroo_data)
 ```
 
-The results of the Kruskal-Wallis test suggest there are significant differences of seed count between mound locations as the p-value is less than the significance level of 0.05. 
+The results of the Kruskal-Wallis test suggest there are significant differences of seed count between mound locations as the p-value is less than the significance level of 0.05. To determine which pairs of mound locations differ in seed count, a pairwise wilcox test was conducted. 
 
 ```{r}
-pairwise.wilcox.test()
+# conduct a pairwise wilcox test to calculate pairwise comparisons between group levels with corrections for multiple testing; "BH" adjustment
+
+pairwise.wilcox.test(kangaroo_data$seed_count, kangaroo_data$microhabitat, p.adjust.method = "BH")
 ```
 
 
+# Results
+
+Based on the Kruskal-Wallis test run, we found that total seed number does differ between kangaroo rat mound locations (*H*(3) = 21.93, p < 0.0001). Pairwise comparisons using the Wilcoxon rank sum test with BH-adjusted p-values was run to compare the total seed counts between mound locations. This revealed that total seed count only differs between B and I (p < 0.0001), D and I ( p = 0.0026), and E and I mound locations (p = 0.0026), where B = base of kangaroo rat mound on mound, I = interspace between black grama grass clumps off mound, D = surrounding area of kangaroo rat mound on mound, and E = edge of black grama grass clumps off mound. 
 
 
 
