@@ -120,9 +120,17 @@ count_var <- leveneTest(seed_count ~ microhabitat, data = kangaroo_data)
 
 count_var
 ```
-Prior to our analysis, we checked assumptions for analysis of variance. We tested for equality of variances between groups using Levene's test and found statistically significant differences in variances between groups (F(3, 1556) = 14.47, p < 0.0001, a = 0.05). We also visually assessed normality using histograms and QQ plots and statistically tested for normality of seed count using Shapiro-Wilk tests for each mound. All mounds indicated deviations from normality (mound B: W = 0.27, p < 0.0001, mound D: W = 0.28, p < 0.0001, mound E: W = 0.34, p < 0.0001, mound I: W = 0.46, p < 0.0001). 
+Prior to our analysis, we checked assumptions for analysis of variance. We tested for equality of variances between groups using Levene's test and found statistically significant differences in variances between groups (F(3, 1556) = 14.47, p < 0.0001, a = 0.05). We also visually assessed normality using histograms and QQ plots and statistically tested for normality of seed count using Shapiro-Wilk tests for each mound. All mounds indicated deviations from normality (mound B: W = 0.27, p < 0.0001, mound D: W = 0.28, p < 0.0001, mound E: W = 0.34, p < 0.0001, mound I: W = 0.46, p < 0.0001). Because of this, a Kruskal-Wallis test was run, as it is a non-parametric alternative to the ANOVA that does not need to meet a normality assumption. 
 
+```{r}
+kruskal.test(seed_count ~ microhabitat, data = kangaroo_data)
+```
 
+The results of the Kruskal-Wallis test suggest there are significant differences of seed count between mound locations as the p-value is less than the significance level of 0.05. 
+
+```{r}
+pairwise.wilcox.test()
+```
 
 
 
