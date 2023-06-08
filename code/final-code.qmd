@@ -14,6 +14,8 @@ execute:
 
 ## Final
 
+Authors: Jesse Grigolite and Bianca Berron
+
 # Problem 1: Kangaroo rat seed banks
 
 # Introduction
@@ -39,6 +41,7 @@ library(corrplot)
 library(AICcmodavg)
 library(GGally)
 library(MuMIn)
+library(patchwork)
 ```
 
 Read in the data:
@@ -72,36 +75,76 @@ mound_I <- kangaroo_data %>%
   filter(microhabitat == "I")
 
 mound_B_hist <- ggplot(data = mound_B, aes(x = seed_count)) +
-  geom_histogram(bins = 20)
+  geom_histogram(bins = 20) +
+  labs(x = "Seed Count", y = "Count") +
+  theme_bw() +
+  theme(panel.grid = element_blank(),
+        text = element_text(family = "Times New Roman")
+        )
 
 mound_D_hist <- ggplot(data = mound_D, aes(x = seed_count)) +
-  geom_histogram(bins = 20)
+  geom_histogram(bins = 20) +
+  labs(x = "Seed Count", y = "Count") +
+  theme_bw() +
+  theme(panel.grid = element_blank(),
+        text = element_text(family = "Times New Roman")
+        )
 
 mound_E_hist <- ggplot(data = mound_E, aes(x = seed_count)) +
-  geom_histogram(bins = 20)
+  geom_histogram(bins = 20) +
+  labs(x = "Seed Count", y = "Count") +
+  theme_bw() +
+  theme(panel.grid = element_blank(),
+        text = element_text(family = "Times New Roman")
+        )
 
 mound_I_hist <- ggplot(data = mound_I, aes(x = seed_count)) +
-  geom_histogram(bins = 20)
+  geom_histogram(bins = 20) +
+  labs(x = "Seed Count", y = "Count") +
+  theme_bw() +
+  theme(panel.grid = element_blank(),
+        text = element_text(family = "Times New Roman")
+        )
 ```
 
 ```{r qq-plots}
 mound_B_qq <- ggplot(data = mound_B, aes(sample = seed_count)) +
   stat_qq_line(linewidth = 1, color = "blue") +
-  stat_qq()
+  stat_qq() +
+  labs(x = "Theoretical", y = "Seed Count") +
+  theme_bw() +
+  theme(panel.grid = element_blank(),
+        text = element_text(family = "Times New Roman")
+        )
 
 mound_D_qq <- ggplot(data = mound_D, aes(sample = seed_count)) +
   stat_qq_line(linewidth = 1, color = "blue") +
-  stat_qq()
+  stat_qq() +
+  labs(x = "Theoretical", y = "Seed Count") +
+  theme_bw() +
+  theme(panel.grid = element_blank(),
+        text = element_text(family = "Times New Roman")
+        )
 
 mound_E_qq <- ggplot(data = mound_E, aes(sample = seed_count)) +
   stat_qq_line(linewidth = 1, color = "blue") +
-  stat_qq()
+  stat_qq() +
+  labs(x = "Theoretical", y = "Seed Count") +
+  theme_bw() +
+  theme(panel.grid = element_blank(),
+        text = element_text(family = "Times New Roman")
+        )
 
 mound_I_qq <- ggplot(data = mound_I, aes(sample = seed_count)) +
   stat_qq_line(linewidth = 1, color = "blue") +
-  stat_qq()
+  stat_qq() +
+  labs(x = "Theoretical", y = "Seed Count") +
+  theme_bw() +
+  theme(panel.grid = element_blank(),
+        text = element_text(family = "Times New Roman")
+        )
 
-
+(mound_B_hist + mound_B_qq) / (mound_D_hist + mound_D_qq) / (mound_E_hist + mound_E_qq) / (mound_I_hist + mound_I_qq)
 ```
 
 
@@ -119,7 +162,7 @@ count_var <- leveneTest(seed_count ~ microhabitat, data = kangaroo_data)
 
 count_var
 ```
-Prior to our analysis, we checked assumptions for analysis of variance. We tested for equality of variances between groups using Levene's test and found statistically significant differences in variances between groups (F(3, 1556) = 14.47, p < 0.0001, a = 0.05). We also visually assessed normality using histograms and QQ plots and statistically tested for normality of seed count using Shapiro-Wilk tests for each mound. All mounds indicated deviations from normality (mound B: W = 0.27, p < 0.0001, mound D: W = 0.28, p < 0.0001, mound E: W = 0.34, p < 0.0001, mound I: W = 0.46, p < 0.0001). Because of this, a Kruskal-Wallis test was run, as it is a non-parametric alternative to the ANOVA that does not need to meet a normality assumption. 
+Prior to our analysis, we checked assumptions for analysis of variance. We tested for equality of variances between groups using Levene's test and found statistically significant differences in variances between groups (F(3, 1556) = 14.47, p < 0.0001, a = 0.05). We also visually assessed normality using histograms and QQ plots and statistically tested for normality of seed count using Shapiro-Wilk tests for each mound. All mounds indicated deviations from normality (mound B: W = 0.27, p < 0.0001, mound D: W = 0.28, p < 0.0001, mound E: W = 0.34, p < 0.0001, mound I: W = 0.46, p < 0.0001). Because of this, a Kruskal-Wallis test was run, as it is a non-parametric alternative to the ANOVA that does not need to meet required assumptions. 
 
 ```{r}
 kruskal.test(seed_count ~ microhabitat, data = kangaroo_data)
