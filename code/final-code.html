@@ -113,6 +113,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a></li>
   <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
+  <li><a href="#problem-2" id="toc-problem-2" class="nav-link" data-scroll-target="#problem-2">Problem 2</a></li>
+  <li><a href="#introduction-1" id="toc-introduction-1" class="nav-link" data-scroll-target="#introduction-1">Introduction</a></li>
   <li><a href="#works-cited" id="toc-works-cited" class="nav-link" data-scroll-target="#works-cited">Works Cited</a></li>
   </ul>
 </nav>
@@ -151,7 +153,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="methods" class="level1">
 <h1>Methods</h1>
-<p>The data from the dataset was compiled by conducting an experiment in which 10 kangaroo rat mounds were randomly selected to collect soil samples from. In addition, subsamples were taken from each mound and grouped into 4 main categories: base of the mound (base), one meter from base samples (surrounding), six meters from base samples at the edge of black grama glass clumps (edge), and six meters from base samples in the interspace between black grama grass clumps (interspace). Soil samples were then dried in an oven for 48 hours at 50 C before being sifted using a sieve to capture small seeds. Eight taxa of seeds were targeted: Cryptantha crassisepala, Descurainia pinnata, Phacelia integrifolia, and Plantago patagonica (spring annuals), Astragalus missouriensis, Lesquerella fendleri, and Oenothera species (perrenial forbs that flower in the spring), and Sphaeralacea species (perennail forb that flowers in the fall). To organize these data, the column names were renamed to be more informative using the rename() function.</p>
+<p>The data from the dataset was compiled by conducting an experiment in which 10 kangaroo rat mounds were randomly selected to collect soil samples from. In addition, subsamples were taken from each mound and grouped into 4 main categories: base of the mound (B), one meter from base samples (S), six meters from base samples at the edge of black grama glass clumps (E), and six meters from base samples in the interspace between black grama grass clumps (I). Soil samples were then dried in an oven for 48 hours at 50 C before being sifted using a sieve to capture small seeds. Eight taxa of seeds were targeted: Cryptantha crassisepala, Descurainia pinnata, Phacelia integrifolia, and Plantago patagonica (spring annuals), Astragalus missouriensis, Lesquerella fendleri, and Oenothera species (perrenial forbs that flower in the spring), and Sphaeralacea species (perennail forb that flowers in the fall). To organize these data, the column names were renamed to be more informative using the rename() function.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -191,105 +193,111 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><img src="final-code_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p><strong>Figure 1: Missing Data.</strong> Number of missing data entires on the x-axis and variables on the y-axis. Plots correspond to number of missing data entries for each variable.</p>
+<p><strong>Figure 1: Missing Data.</strong> Number of missing data entries on the x-axis and variables on the y-axis. Plots correspond to number of missing data entries for each variable.</p>
 <p>To determine whether seed numbers differ between kangaroo rat mound locations an ANOVA test was conducted. First the assumptions for this test were checked including normality and variance.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mound_B <span class="ot">&lt;-</span> kangaroo_data <span class="sc">%&gt;%</span> </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(microhabitat <span class="sc">==</span> <span class="st">"B"</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>mound_D <span class="ot">&lt;-</span> kangaroo_data <span class="sc">%&gt;%</span> </span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(microhabitat <span class="sc">==</span> <span class="st">"D"</span>)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>mound_E <span class="ot">&lt;-</span> kangaroo_data <span class="sc">%&gt;%</span> </span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(microhabitat <span class="sc">==</span> <span class="st">"E"</span>)</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>mound_I <span class="ot">&lt;-</span> kangaroo_data <span class="sc">%&gt;%</span> </span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(microhabitat <span class="sc">==</span> <span class="st">"I"</span>)</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>mound_B_hist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> mound_B, <span class="fu">aes</span>(<span class="at">x =</span> seed_count)) <span class="sc">+</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Seed Count"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"Times New Roman"</span>)</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>mound_D_hist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> mound_D, <span class="fu">aes</span>(<span class="at">x =</span> seed_count)) <span class="sc">+</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Seed Count"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"Times New Roman"</span>)</span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>mound_E_hist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> mound_E, <span class="fu">aes</span>(<span class="at">x =</span> seed_count)) <span class="sc">+</span></span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Seed Count"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>        <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"Times New Roman"</span>)</span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>mound_I_hist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> mound_I, <span class="fu">aes</span>(<span class="at">x =</span> seed_count)) <span class="sc">+</span></span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
-<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Seed Count"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
-<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>        <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"Times New Roman"</span>)</span>
-<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>        )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create different data frames for each mound</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>mound_B <span class="ot">&lt;-</span> kangaroo_data <span class="sc">%&gt;%</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(microhabitat <span class="sc">==</span> <span class="st">"B"</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>mound_D <span class="ot">&lt;-</span> kangaroo_data <span class="sc">%&gt;%</span> </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(microhabitat <span class="sc">==</span> <span class="st">"D"</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>mound_E <span class="ot">&lt;-</span> kangaroo_data <span class="sc">%&gt;%</span> </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(microhabitat <span class="sc">==</span> <span class="st">"E"</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>mound_I <span class="ot">&lt;-</span> kangaroo_data <span class="sc">%&gt;%</span> </span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(microhabitat <span class="sc">==</span> <span class="st">"I"</span>)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co"># create histograms for each species</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>mound_B_hist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> mound_B, <span class="fu">aes</span>(<span class="at">x =</span> seed_count)) <span class="sc">+</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Seed Count"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"Times New Roman"</span>)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>mound_D_hist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> mound_D, <span class="fu">aes</span>(<span class="at">x =</span> seed_count)) <span class="sc">+</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Seed Count"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"Times New Roman"</span>)</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>mound_E_hist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> mound_E, <span class="fu">aes</span>(<span class="at">x =</span> seed_count)) <span class="sc">+</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Seed Count"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>        <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"Times New Roman"</span>)</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>mound_I_hist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> mound_I, <span class="fu">aes</span>(<span class="at">x =</span> seed_count)) <span class="sc">+</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Seed Count"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>        <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"Times New Roman"</span>)</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>        )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mound_B_qq <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> mound_B, <span class="fu">aes</span>(<span class="at">sample =</span> seed_count)) <span class="sc">+</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Theoretical"</span>, <span class="at">y =</span> <span class="st">"Seed Count"</span>) <span class="sc">+</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"Times New Roman"</span>)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>mound_D_qq <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> mound_D, <span class="fu">aes</span>(<span class="at">sample =</span> seed_count)) <span class="sc">+</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Theoretical"</span>, <span class="at">y =</span> <span class="st">"Seed Count"</span>) <span class="sc">+</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"Times New Roman"</span>)</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>mound_E_qq <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> mound_E, <span class="fu">aes</span>(<span class="at">sample =</span> seed_count)) <span class="sc">+</span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Theoretical"</span>, <span class="at">y =</span> <span class="st">"Seed Count"</span>) <span class="sc">+</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"Times New Roman"</span>)</span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>mound_I_qq <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> mound_I, <span class="fu">aes</span>(<span class="at">sample =</span> seed_count)) <span class="sc">+</span></span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span></span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Theoretical"</span>, <span class="at">y =</span> <span class="st">"Seed Count"</span>) <span class="sc">+</span></span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>        <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"Times New Roman"</span>)</span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>(mound_B_hist <span class="sc">+</span> mound_B_qq) <span class="sc">/</span> (mound_D_hist <span class="sc">+</span> mound_D_qq) <span class="sc">/</span> (mound_E_hist <span class="sc">+</span> mound_E_qq) <span class="sc">/</span> (mound_I_hist <span class="sc">+</span> mound_I_qq)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create QQ plots for each species</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>mound_B_qq <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> mound_B, <span class="fu">aes</span>(<span class="at">sample =</span> seed_count)) <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Theoretical"</span>, <span class="at">y =</span> <span class="st">"Seed Count"</span>) <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"Times New Roman"</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>mound_D_qq <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> mound_D, <span class="fu">aes</span>(<span class="at">sample =</span> seed_count)) <span class="sc">+</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Theoretical"</span>, <span class="at">y =</span> <span class="st">"Seed Count"</span>) <span class="sc">+</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"Times New Roman"</span>)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>mound_E_qq <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> mound_E, <span class="fu">aes</span>(<span class="at">sample =</span> seed_count)) <span class="sc">+</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Theoretical"</span>, <span class="at">y =</span> <span class="st">"Seed Count"</span>) <span class="sc">+</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"Times New Roman"</span>)</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>mound_I_qq <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> mound_I, <span class="fu">aes</span>(<span class="at">sample =</span> seed_count)) <span class="sc">+</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Theoretical"</span>, <span class="at">y =</span> <span class="st">"Seed Count"</span>) <span class="sc">+</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>        <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"Times New Roman"</span>)</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a><span class="co"># put all the plots together using the "patchwork" feature</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>(mound_B_hist <span class="sc">+</span> mound_B_qq) <span class="sc">/</span> (mound_D_hist <span class="sc">+</span> mound_D_qq) <span class="sc">/</span> (mound_E_hist <span class="sc">+</span> mound_E_qq) <span class="sc">/</span> (mound_I_hist <span class="sc">+</span> mound_I_qq)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="final-code_files/figure-html/qq-plots-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p><strong>Figure 2. Visual checks for normality.</strong> Histograms of seed counts for each mound location. Bars represent number of seed counts in each bin. QQ plots of seed count. Points in QQ plot represent sample quantiles compared to theoretical quantiles from a normal distribution. Solid blue lines represent a 1:1 relationship between sample and theoretical quantiles.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(mound_B<span class="sc">$</span>seed_count)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># shapiro tests to statistically test for normal distribution</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(mound_B<span class="sc">$</span>seed_count)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -335,9 +343,10 @@ W = 0.45561, p-value &lt; 2.2e-16</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>count_var <span class="ot">&lt;-</span> <span class="fu">leveneTest</span>(seed_count <span class="sc">~</span> microhabitat, <span class="at">data =</span> kangaroo_data)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>count_var</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check for equal variances</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>count_var <span class="ot">&lt;-</span> <span class="fu">leveneTest</span>(seed_count <span class="sc">~</span> microhabitat, <span class="at">data =</span> kangaroo_data)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>count_var</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Levene's Test for Homogeneity of Variance (center = median)
@@ -362,7 +371,7 @@ data:  seed_count by microhabitat
 Kruskal-Wallis chi-squared = 21.932, df = 3, p-value = 6.738e-05</code></pre>
 </div>
 </div>
-<p>The results of the Kruskal-Wallis test suggest there are significant differences of seed count between mound locations as the p-value is less than the significance level of 0.05. To determine which pairs of mound locations differ in seed count, a pairwise wilcox test was conducted.</p>
+<p>The results of the Kruskal-Wallis test suggest there are significant differences of seed count between mound locations as the p-value is less than the significance level of 0.05. Therefore, the null hypothesis was rejected. To determine which pairs of mound locations differ in seed count, a pairwise wilcox test was conducted.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -388,12 +397,47 @@ P value adjustment method: BH </code></pre>
 <section id="results" class="level1">
 <h1>Results</h1>
 <p>Based on the Kruskal-Wallis test run, we found that total seed number does differ between kangaroo rat mound locations (<em>H</em>(3) = 21.93, p &lt; 0.0001). Pairwise comparisons using the Wilcoxon rank sum test with BH-adjusted p-values was run to compare the total seed counts between mound locations. This revealed that total seed count only differs between B and I (p &lt; 0.0001), D and I ( p = 0.0026), and E and I mound locations (p = 0.0026), where B = base of kangaroo rat mound on mound, I = interspace between black grama grass clumps off mound, D = surrounding area of kangaroo rat mound on mound, and E = edge of black grama grass clumps off mound.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create visualization to show differing seed counts by mound location</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> kangaroo_data, <span class="fu">aes</span>(<span class="at">x =</span> microhabitat,<span class="at">y =</span> seed_count)) <span class="sc">+</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># make each bar a different color to differentiate between mound locations</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="fu">aes</span>(<span class="at">fill =</span> microhabitat)) <span class="sc">+</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># change legend title</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="at">name =</span> <span class="st">"Mound Location"</span>) <span class="sc">+</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span> (<span class="at">x =</span> <span class="st">"Mound Location"</span>, <span class="at">y =</span> <span class="st">"Seed Count"</span>, <span class="at">title =</span> <span class="st">"Seed Count by Mound Location"</span>) <span class="sc">+</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">family =</span> <span class="st">"Times New Roman"</span>)  </span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="final-code_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Figure 3. Seed Count across Mound Locations.</strong> Mound location on x-axis and seed count on y-axis. Each mound location is represented with a different color where B (base of mound) is red, D (surrounding area) is green, E (edge of black grama grass clumps) is blue, and I (interspace between black grama glass clumps) is purple. Heights of bars represent total seed count at each location.</p>
+<p>The above figure displays how seed count does vary across mound locations, specifically between B and I, D and I, as well as E and I.</p>
+</section>
+<section id="problem-2" class="level1">
+<h1>Problem 2</h1>
+</section>
+<section id="introduction-1" class="level1">
+<h1>Introduction</h1>
+<ul>
+<li>shrubification, increase in woody shrub that changes the composition of an ecosystem, due to climate change induced alterations in precipitation, temperature, and soil moisture, more establishment and colonization of woody shrubs to create an alpine ecosystem[4] -how will plant reproduction be affected by this, which will increase seed distribution and is this a determining factor for plant reproductive success</li>
+<li>plants will respond to environmental change through quanitity and quality of their seed provision, can change the structure and thickness of seet coat which influence the endosperm and provisions that the embryo has access to [5]</li>
+<li>studies conducted suggest that parental temperature significantly determines seed coat and seed mass but not embryo mass</li>
+<li>amount of seeds created increases genetic variety in the population and increased survival [5]</li>
+<li>individual plant would reach maximum fitness by producing an infinite number of seeds, is a determining factor in the success of seedling establishment in an environment</li>
+</ul>
 </section>
 <section id="works-cited" class="level1">
 <h1>Works Cited</h1>
-<p>https://link.springer.com/article/10.1007/bf00328605?utm_source=getftr&amp;utm_medium=getftr&amp;utm_campaign=getftr_pilot</p>
-<p>https://www.jstor.org/stable/2426018?origin=crossref</p>
-<p>https://pdf.sciencedirectassets.com/272559/1-s2.0-S0140196308X00059/1-s2.0-S014019630700345X/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEAUaCXVzLWVhc3QtMSJIMEYCIQCJhda6E0FSmJMmYJVWyUomKv%2Bcho1LLFrAVIRRcJNG1AIhAMut05%2BlEIWjO3DWs1pCXxSVgMDKJzKyMvNRD66%2BljYjKrIFCE0QBRoMMDU5MDAzNTQ2ODY1IgylYW%2FwtWIv5JWOzncqjwW%2F7gFInPENcKagkFSJi9UimxEwuy0RKODPF0bZN%2BzvyWQ4T3md4TbBd2yL4YSU%2FKZQIj4UscIcSVtEX51dAXsymSKHgKd5Vf95eEXunqg84asKx3kSAUt0z%2BLuaasbaxdaMU7Ym0gIrjf%2Fo9rhVJ385PEv3V1PR4dfhzfnN%2BxnjHtouvRUSplIawkYcmzgCuodo%2B%2B27EqfKEFf2yw8D9NxT7zzbK7puAojSzRBooH7d28JcvZfkyvqFukUcoaxq9h87qAkjvL5znzpfRBFDRQbcON2ALvaaJAzquLBatvAPR%2FYtTC1AzhCUg2e1z3DB9cGI3u%2BjFVI2ueEs0n%2B5G3aYFs62TOxA1hRUIVXYY8jjEWpsmb8Qll5BieaDXB%2BnFvG%2FQ%2F2ko6aZtX8SdBLXa8HBbCDKOXyBAGg8Q0%2BAhEWcRIjp%2BVx%2FxzbLvHqA8%2ByopDQpEfYWGCwr12uZqoLVKHq2eM0mS%2BapFs7LWkCh8LA1v7NLn1bUOiR3vtAFv4r5ROynyP28PW0BFvTBj5jNds4tvPx0gSByoHBhGBv7U4ldgtlQCdbhaB4NnkCM1LDZ9IeCw%2BMlVwF3sm6Jt%2B0BOnLPcNhR99aNbO2ilSA2tQd1gQwbFCoCCkWkBVV0Uf%2Ff7Puk2Af5IcwH24JfUd%2FCz8aNa%2FyTMeqBGCeNhU4oLrY12QQN5vbuBMfwO1njn1UBUsFnr%2Fm%2BaQK35TsAw7jKAygULP9NOEpXo%2BoVGBKHh8PEv1gnp26txpnoczA%2BbiwtPMNps7dAgOw77gKCp9pjKA4OiUuYS6iZHoW1cucW%2FNLHM7q6gS0nCH8vqJh5XAp%2FuWIUOqL%2FcZk11X0HllrdBxxPpnp8NxLUrJqI9RZ5GoZMP%2Bk%2FqMGOrABRVsprCDl5PXeIPp3xCZsNJnXNdN2iI5%2Fj%2BoqzPOaUAXL37nRBpR9BMKWp7hg6rYGr4joWSNBi2bU0cqW%2BffYhrmbBRS1d%2BC5xZ6bRv%2F8J6z%2FfLL0yu169kyHmzTh0I9hzxCNTlv6TGDuAo%2BpSl4ljLwneHEsC8D0QfQ8Qmgtn31pRhP7eyWq6%2FxMKP4uhUIQpiW%2BidgSBUuTAmcYYqjTIRYOhLSHkQSPxno%2B1zXqb8g%3D&amp;X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20230606T213756Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=300&amp;X-Amz-Credential=ASIAQ3PHCVTY776KDSP3%2F20230606%2Fus-east-1%2Fs3%2Faws4_request&amp;X-Amz-Signature=18f7de3fcb18a1265bed0c8d9a10709f067efc7f345b11c87e92c563eec6f561&amp;hash=74952f99329839540e93b032b1f0f2ba2c244a69e00c7bc5ea35d035a4c104df&amp;host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&amp;pii=S014019630700345X&amp;tid=spdf-9d03e12e-c97a-4c53-b743-4f0673e3e4c7&amp;sid=9308c8849183a247132a37f-d41f656897c3gxrqa&amp;type=client&amp;tsoh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&amp;ua=0f1c560b5c5d05050052&amp;rr=7d33cca4ab567d5c&amp;cc=us</p>
+<p>Davidson, A.D., and D.C. Lightfoot. “Burrowing Rodents Increase Landscape Heterogeneity in a Desert Grassland.” Journal of Arid Environments, vol.&nbsp;72, no. 7, 2008, pp.&nbsp;1133–1145, https://doi.org/10.1016/j.jaridenv.2007.12.015.</p>
+<p>Guo, Qinfeng. “Effects of Bannertail Kangaroo Rat Mounds on Small-Scale Plant Community Structure.” Oecologia, vol.&nbsp;106, no. 2, 1996, pp.&nbsp;247–256, https://doi.org/10.1007/bf00328605.</p>
+<p>Moorhead, D. L., et al.&nbsp;“Cover of Spring Annuals on Nitrogen-Rich Kangaroo Rat Mounds in a Chihuahuan Desert Grassland.” American Midland Naturalist, vol.&nbsp;120, no. 2, 1988, p.&nbsp;443, https://doi.org/10.2307/2426018.</p>
+<p>[4] actual paper [5]Phenotypic plasticity for plant development, function and life history [6] https://bsapubs.onlinelibrary.wiley.com/doi/epdf/10.2307/2446624?src=getftr [7] https://www.annualreviews.org/doi/pdf/10.1146/annurev.es.18.110187.002205</p>
 </section>
 
 </main>
