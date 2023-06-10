@@ -192,7 +192,7 @@ ggplot(data = kangaroo_data, aes(x = microhabitat,y = seed_count)) +
   text = element_text(family = "Times New Roman")  
   )
 ``` 
-**Figure 3. Seed Count across Mound Locations.** Mound location on x-axis and seed count on
+**Figure 3. Seed Count across Mound Locations.** Mound location on x-axis and seed count on y-axis. 
 
 # Results
 
