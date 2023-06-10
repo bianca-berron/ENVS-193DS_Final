@@ -203,13 +203,16 @@ Based on the Kruskal-Wallis test run, we found that total seed number does diffe
 # Problem 2
 
 # Introduction
-- shrubification, increase in woody shrub that changes the composition of an ecosystem, due to climate change induced alterations in precipitation, temperature, and soil moisture, more extablishment and colonization of woody shrubs to create an alpine ecosystem[4]
+- shrubification, increase in woody shrub that changes the composition of an ecosystem, due to climate change induced alterations in precipitation, temperature, and soil moisture, more establishment and colonization of woody shrubs to create an alpine ecosystem[4]
 -how will plant reproduction be affected by this, which will increase seed distribution and is this a determining factor for plant reproductive success
+- plants will respond to environmental change through quanitity and quality of their seed provision, can change the structure and thickness of seet coat which influence the endosperm and provisions that the embryo has access to [5]
+- studies conducted suggest that parental temperature significantly determines seed coat and seed mass but not embryo mass
+- amount of seeds created increases genetic variety in the population and increased survival [5]
+- individual plant would reach maximum fitness by producing an infinite number of seeds, is a determining factor in the success of seedling establishment in an environment
 
 
 
 
-odfgkqdnfkdqnfkdnfkl
 
 
 
@@ -224,3 +227,6 @@ https://www.jstor.org/stable/2426018?origin=crossref
 https://pdf.sciencedirectassets.com/272559/1-s2.0-S0140196308X00059/1-s2.0-S014019630700345X/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEAUaCXVzLWVhc3QtMSJIMEYCIQCJhda6E0FSmJMmYJVWyUomKv%2Bcho1LLFrAVIRRcJNG1AIhAMut05%2BlEIWjO3DWs1pCXxSVgMDKJzKyMvNRD66%2BljYjKrIFCE0QBRoMMDU5MDAzNTQ2ODY1IgylYW%2FwtWIv5JWOzncqjwW%2F7gFInPENcKagkFSJi9UimxEwuy0RKODPF0bZN%2BzvyWQ4T3md4TbBd2yL4YSU%2FKZQIj4UscIcSVtEX51dAXsymSKHgKd5Vf95eEXunqg84asKx3kSAUt0z%2BLuaasbaxdaMU7Ym0gIrjf%2Fo9rhVJ385PEv3V1PR4dfhzfnN%2BxnjHtouvRUSplIawkYcmzgCuodo%2B%2B27EqfKEFf2yw8D9NxT7zzbK7puAojSzRBooH7d28JcvZfkyvqFukUcoaxq9h87qAkjvL5znzpfRBFDRQbcON2ALvaaJAzquLBatvAPR%2FYtTC1AzhCUg2e1z3DB9cGI3u%2BjFVI2ueEs0n%2B5G3aYFs62TOxA1hRUIVXYY8jjEWpsmb8Qll5BieaDXB%2BnFvG%2FQ%2F2ko6aZtX8SdBLXa8HBbCDKOXyBAGg8Q0%2BAhEWcRIjp%2BVx%2FxzbLvHqA8%2ByopDQpEfYWGCwr12uZqoLVKHq2eM0mS%2BapFs7LWkCh8LA1v7NLn1bUOiR3vtAFv4r5ROynyP28PW0BFvTBj5jNds4tvPx0gSByoHBhGBv7U4ldgtlQCdbhaB4NnkCM1LDZ9IeCw%2BMlVwF3sm6Jt%2B0BOnLPcNhR99aNbO2ilSA2tQd1gQwbFCoCCkWkBVV0Uf%2Ff7Puk2Af5IcwH24JfUd%2FCz8aNa%2FyTMeqBGCeNhU4oLrY12QQN5vbuBMfwO1njn1UBUsFnr%2Fm%2BaQK35TsAw7jKAygULP9NOEpXo%2BoVGBKHh8PEv1gnp26txpnoczA%2BbiwtPMNps7dAgOw77gKCp9pjKA4OiUuYS6iZHoW1cucW%2FNLHM7q6gS0nCH8vqJh5XAp%2FuWIUOqL%2FcZk11X0HllrdBxxPpnp8NxLUrJqI9RZ5GoZMP%2Bk%2FqMGOrABRVsprCDl5PXeIPp3xCZsNJnXNdN2iI5%2Fj%2BoqzPOaUAXL37nRBpR9BMKWp7hg6rYGr4joWSNBi2bU0cqW%2BffYhrmbBRS1d%2BC5xZ6bRv%2F8J6z%2FfLL0yu169kyHmzTh0I9hzxCNTlv6TGDuAo%2BpSl4ljLwneHEsC8D0QfQ8Qmgtn31pRhP7eyWq6%2FxMKP4uhUIQpiW%2BidgSBUuTAmcYYqjTIRYOhLSHkQSPxno%2B1zXqb8g%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20230606T213756Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ3PHCVTY776KDSP3%2F20230606%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=18f7de3fcb18a1265bed0c8d9a10709f067efc7f345b11c87e92c563eec6f561&hash=74952f99329839540e93b032b1f0f2ba2c244a69e00c7bc5ea35d035a4c104df&host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&pii=S014019630700345X&tid=spdf-9d03e12e-c97a-4c53-b743-4f0673e3e4c7&sid=9308c8849183a247132a37f-d41f656897c3gxrqa&type=client&tsoh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&ua=0f1c560b5c5d05050052&rr=7d33cca4ab567d5c&cc=us
 
 [4] actual paper
+[5]Phenotypic plasticity for plant development, function and life history
+[6] https://bsapubs.onlinelibrary.wiley.com/doi/epdf/10.2307/2446624?src=getftr
+[7] https://www.annualreviews.org/doi/pdf/10.1146/annurev.es.18.110187.002205
