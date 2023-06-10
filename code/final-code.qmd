@@ -203,6 +203,7 @@ The above figure displays how seed count does vary across mound locations, speci
 # Problem 2
 
 # Introduction
+As the climate continues to change from anthropogenic induced emissions, environmental conditions that determine ecosystem composition alter. In Niwot Ridge, Colorado environmental conditions have began to drift from the status quo due to alterations in temperature, soil moisture, and precipitation [1]. The new state of the environment has made it particularly hospitable to woody shrub establishment, altering the composition of the entire ecosystem. 
 - shrubification, increase in woody shrub that changes the composition of an ecosystem, due to climate change induced alterations in precipitation, temperature, and soil moisture, more establishment and colonization of woody shrubs to create an alpine ecosystem[4]
 -how will plant reproduction be affected by this, which will increase seed distribution and is this a determining factor for plant reproductive success
 - plants will respond to environmental change through quanitity and quality of their seed provision, can change the structure and thickness of seet coat which influence the endosperm and provisions that the embryo has access to [5]
