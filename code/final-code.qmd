@@ -62,6 +62,7 @@ gg_miss_var(kangaroo_data)
 To determine whether seed numbers differ between kangaroo rat mound locations an ANOVA test was conducted. First the assumptions for this test were checked including normality and variance. 
 
 ```{r}
+# create different data frames for each mound
 mound_B <- kangaroo_data %>% 
   filter(microhabitat == "B")
 
@@ -74,6 +75,7 @@ mound_E <- kangaroo_data %>%
 mound_I <- kangaroo_data %>% 
   filter(microhabitat == "I")
 
+# create histograms for each species
 mound_B_hist <- ggplot(data = mound_B, aes(x = seed_count)) +
   geom_histogram(bins = 20) +
   labs(x = "Seed Count", y = "Count") +
@@ -108,6 +110,7 @@ mound_I_hist <- ggplot(data = mound_I, aes(x = seed_count)) +
 ```
 
 ```{r qq-plots}
+# create QQ plots for each species
 mound_B_qq <- ggplot(data = mound_B, aes(sample = seed_count)) +
   stat_qq_line(linewidth = 1, color = "blue") +
   stat_qq() +
@@ -144,12 +147,14 @@ mound_I_qq <- ggplot(data = mound_I, aes(sample = seed_count)) +
         text = element_text(family = "Times New Roman")
         )
 
+# put all the plots together using the "patchwork" feature
 (mound_B_hist + mound_B_qq) / (mound_D_hist + mound_D_qq) / (mound_E_hist + mound_E_qq) / (mound_I_hist + mound_I_qq)
 ```
-
+**Figure 2. Visual checks for normality.** Histograms of seed counts for each mound location. Bars represent number of seed counts in each bin. QQ plots of seed count. Points in QQ plot represent sample quantiles compared to theoretical quantiles from a normal distribution. Solid blue lines represent a 1:1 relationship between sample and theoretical quantiles. 
 
 
 ```{r shapiro-test}
+# shapiro tests to statistically test for normal distribution
 shapiro.test(mound_B$seed_count)
 shapiro.test(mound_D$seed_count)
 shapiro.test(mound_E$seed_count)
@@ -158,6 +163,7 @@ shapiro.test(mound_I$seed_count)
 
 
 ```{r}
+# check for equal variances
 count_var <- leveneTest(seed_count ~ microhabitat, data = kangaroo_data)
 
 count_var
@@ -175,6 +181,17 @@ The results of the Kruskal-Wallis test suggest there are significant differences
 
 pairwise.wilcox.test(kangaroo_data$seed_count, kangaroo_data$microhabitat, p.adjust.method = "BH")
 ```
+
+```{r}
+ggplot(data = kangaroo_data, aes(x = microhabitat,y = seed_count)) +
+  geom_bar(stat = "identity") +
+  theme_bw() +
+  labs (x = "Mound Location", y = "Seed Count", title = "Seed Count by Mound Location") +
+  theme(
+  text = element_text(family = "Times New Roman")  
+  )
+``` 
+
 
 
 # Results
