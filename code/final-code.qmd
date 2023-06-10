@@ -20,11 +20,11 @@ Authors: Jesse Grigolite and Bianca Berron
 
 # Introduction
 
-Kangaroo rats are small, mostly nocturnal rodents that are native to western North America in arid areas. The mounds they create can result in the formation of microhabitats that support unique plant communities and local species diversity (Guo 1). This in part is due to the fact that these mounds possess more organic matter to promote plant growth (Davidson and Lightfoot 1). Although there is evidence of more plant growth on these mounds, there is not much data on the composition of the seed bank on kangaroo rat mounds (Moorhead et.al). Therefore this analysis serves to understand how total seed number differs between kangaroo rat mound locations in a Chihuahuan Desert Grassland. We are testing the null hypothesis that seed numbers do not different between kangaroo rat mound locations against the alternative hypothesis that seed numbers do differ between kangaroo rat mound locations. 
+Kangaroo rats are small, mostly nocturnal rodents that are native to western North America in arid areas. The mounds they create can result in the formation of microhabitats that support unique plant communities and local species diversity (Guo 1). This in part is due to the fact that these mounds possess more organic matter to promote plant growth (Davidson and Lightfoot 1). Although there is evidence of more plant growth on these mounds, there is not much data on the composition of the seed bank on kangaroo rat mounds (Moorhead et.al). Therefore this analysis serves to understand how total seed number differs between kangaroo rat mound locations in a Chihuahuan Desert Grassland. We are testing the null hypothesis that seed numbers do not different between kangaroo rat mound locations against the alternative hypothesis that seed numbers do differ between kangaroo rat mound locations.
 
 # Methods
 
-The data from the dataset was compiled by conducting an experiment in which 10 kangaroo rat mounds were randomly selected to collect soil samples from. In addition, subsamples were taken from each mound and grouped into 4 main categories: base of the mound (base), one meter from base samples (surrounding), six meters from base samples at the edge of black grama glass clumps (edge), and six meters from base samples in the interspace between black grama grass clumps (interspace). Soil samples were then dried in an oven for 48 hours at 50 C before being sifted using a sieve to capture small seeds. Eight taxa of seeds were targeted: Cryptantha crassisepala, Descurainia pinnata, Phacelia integrifolia, and Plantago patagonica (spring annuals), Astragalus missouriensis, Lesquerella fendleri, and Oenothera species (perrenial forbs that flower in the spring), and Sphaeralacea species (perennail forb that flowers in the fall). To organize these data, the column names were renamed to be more informative using the rename() function. 
+The data from the dataset was compiled by conducting an experiment in which 10 kangaroo rat mounds were randomly selected to collect soil samples from. In addition, subsamples were taken from each mound and grouped into 4 main categories: base of the mound (base), one meter from base samples (surrounding), six meters from base samples at the edge of black grama glass clumps (edge), and six meters from base samples in the interspace between black grama grass clumps (interspace). Soil samples were then dried in an oven for 48 hours at 50 C before being sifted using a sieve to capture small seeds. Eight taxa of seeds were targeted: Cryptantha crassisepala, Descurainia pinnata, Phacelia integrifolia, and Plantago patagonica (spring annuals), Astragalus missouriensis, Lesquerella fendleri, and Oenothera species (perrenial forbs that flower in the spring), and Sphaeralacea species (perennail forb that flowers in the fall). To organize these data, the column names were renamed to be more informative using the rename() function.
 
 ```{r set-up}
 library(tidyverse)
@@ -57,9 +57,10 @@ Next, a visualization of the missing data were created which showed there were n
 ```{r}
 gg_miss_var(kangaroo_data)
 ```
-**Figure 1: Missing Data.** Number of missing data entires on the x-axis and variables on the y-axis. Plots correspond to number of missing data entries for each variable. 
 
-To determine whether seed numbers differ between kangaroo rat mound locations an ANOVA test was conducted. First the assumptions for this test were checked including normality and variance. 
+**Figure 1: Missing Data.** Number of missing data entires on the x-axis and variables on the y-axis. Plots correspond to number of missing data entries for each variable.
+
+To determine whether seed numbers differ between kangaroo rat mound locations an ANOVA test was conducted. First the assumptions for this test were checked including normality and variance.
 
 ```{r}
 mound_B <- kangaroo_data %>% 
@@ -147,8 +148,6 @@ mound_I_qq <- ggplot(data = mound_I, aes(sample = seed_count)) +
 (mound_B_hist + mound_B_qq) / (mound_D_hist + mound_D_qq) / (mound_E_hist + mound_E_qq) / (mound_I_hist + mound_I_qq)
 ```
 
-
-
 ```{r shapiro-test}
 shapiro.test(mound_B$seed_count)
 shapiro.test(mound_D$seed_count)
@@ -156,19 +155,19 @@ shapiro.test(mound_E$seed_count)
 shapiro.test(mound_I$seed_count)
 ```
 
-
 ```{r}
 count_var <- leveneTest(seed_count ~ microhabitat, data = kangaroo_data)
 
 count_var
 ```
-Prior to our analysis, we checked assumptions for analysis of variance. We tested for equality of variances between groups using Levene's test and found statistically significant differences in variances between groups (F(3, 1556) = 14.47, p < 0.0001, a = 0.05). We also visually assessed normality using histograms and QQ plots and statistically tested for normality of seed count using Shapiro-Wilk tests for each mound. All mounds indicated deviations from normality (mound B: W = 0.27, p < 0.0001, mound D: W = 0.28, p < 0.0001, mound E: W = 0.34, p < 0.0001, mound I: W = 0.46, p < 0.0001). Because of this, a Kruskal-Wallis test was run, as it is a non-parametric alternative to the ANOVA that does not need to meet required assumptions. 
+
+Prior to our analysis, we checked assumptions for analysis of variance. We tested for equality of variances between groups using Levene's test and found statistically significant differences in variances between groups (F(3, 1556) = 14.47, p \< 0.0001, a = 0.05). We also visually assessed normality using histograms and QQ plots and statistically tested for normality of seed count using Shapiro-Wilk tests for each mound. All mounds indicated deviations from normality (mound B: W = 0.27, p \< 0.0001, mound D: W = 0.28, p \< 0.0001, mound E: W = 0.34, p \< 0.0001, mound I: W = 0.46, p \< 0.0001). Because of this, a Kruskal-Wallis test was run, as it is a non-parametric alternative to the ANOVA that does not need to meet required assumptions.
 
 ```{r}
 kruskal.test(seed_count ~ microhabitat, data = kangaroo_data)
 ```
 
-The results of the Kruskal-Wallis test suggest there are significant differences of seed count between mound locations as the p-value is less than the significance level of 0.05. To determine which pairs of mound locations differ in seed count, a pairwise wilcox test was conducted. 
+The results of the Kruskal-Wallis test suggest there are significant differences of seed count between mound locations as the p-value is less than the significance level of 0.05. To determine which pairs of mound locations differ in seed count, a pairwise wilcox test was conducted.
 
 ```{r}
 # conduct a pairwise wilcox test to calculate pairwise comparisons between group levels with corrections for multiple testing; "BH" adjustment
@@ -176,19 +175,11 @@ The results of the Kruskal-Wallis test suggest there are significant differences
 pairwise.wilcox.test(kangaroo_data$seed_count, kangaroo_data$microhabitat, p.adjust.method = "BH")
 ```
 
-
 # Results
 
-Based on the Kruskal-Wallis test run, we found that total seed number does differ between kangaroo rat mound locations (*H*(3) = 21.93, p < 0.0001). Pairwise comparisons using the Wilcoxon rank sum test with BH-adjusted p-values was run to compare the total seed counts between mound locations. This revealed that total seed count only differs between B and I (p < 0.0001), D and I ( p = 0.0026), and E and I mound locations (p = 0.0026), where B = base of kangaroo rat mound on mound, I = interspace between black grama grass clumps off mound, D = surrounding area of kangaroo rat mound on mound, and E = edge of black grama grass clumps off mound. 
+Based on the Kruskal-Wallis test run, we found that total seed number does differ between kangaroo rat mound locations (*H*(3) = 21.93, p \< 0.0001). Pairwise comparisons using the Wilcoxon rank sum test with BH-adjusted p-values was run to compare the total seed counts between mound locations. This revealed that total seed count only differs between B and I (p \< 0.0001), D and I ( p = 0.0026), and E and I mound locations (p = 0.0026), where B = base of kangaroo rat mound on mound, I = interspace between black grama grass clumps off mound, D = surrounding area of kangaroo rat mound on mound, and E = edge of black grama grass clumps off mound.
 
-
-
-
-
-
-
-
-# Works Cited 
+# Works Cited
 
 https://link.springer.com/article/10.1007/bf00328605?utm_source=getftr&utm_medium=getftr&utm_campaign=getftr_pilot
 
