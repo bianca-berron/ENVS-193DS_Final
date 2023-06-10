@@ -24,7 +24,7 @@ Kangaroo rats are small, mostly nocturnal rodents that are native to western Nor
 
 # Methods
 
-The data from the dataset was compiled by conducting an experiment in which 10 kangaroo rat mounds were randomly selected to collect soil samples from. In addition, subsamples were taken from each mound and grouped into 4 main categories: base of the mound (base), one meter from base samples (surrounding), six meters from base samples at the edge of black grama glass clumps (edge), and six meters from base samples in the interspace between black grama grass clumps (interspace). Soil samples were then dried in an oven for 48 hours at 50 C before being sifted using a sieve to capture small seeds. Eight taxa of seeds were targeted: Cryptantha crassisepala, Descurainia pinnata, Phacelia integrifolia, and Plantago patagonica (spring annuals), Astragalus missouriensis, Lesquerella fendleri, and Oenothera species (perrenial forbs that flower in the spring), and Sphaeralacea species (perennail forb that flowers in the fall). To organize these data, the column names were renamed to be more informative using the rename() function.
+The data from the dataset was compiled by conducting an experiment in which 10 kangaroo rat mounds were randomly selected to collect soil samples from. In addition, subsamples were taken from each mound and grouped into 4 main categories: base of the mound (B), one meter from base samples (S), six meters from base samples at the edge of black grama glass clumps (E), and six meters from base samples in the interspace between black grama grass clumps (I). Soil samples were then dried in an oven for 48 hours at 50 C before being sifted using a sieve to capture small seeds. Eight taxa of seeds were targeted: Cryptantha crassisepala, Descurainia pinnata, Phacelia integrifolia, and Plantago patagonica (spring annuals), Astragalus missouriensis, Lesquerella fendleri, and Oenothera species (perrenial forbs that flower in the spring), and Sphaeralacea species (perennail forb that flowers in the fall). To organize these data, the column names were renamed to be more informative using the rename() function.
 
 ```{r set-up}
 library(tidyverse)
@@ -57,7 +57,6 @@ Next, a visualization of the missing data were created which showed there were n
 ```{r}
 gg_miss_var(kangaroo_data)
 ```
-
 **Figure 1: Missing Data.** Number of missing data entires on the x-axis and variables on the y-axis. Plots correspond to number of missing data entries for each variable.
 
 To determine whether seed numbers differ between kangaroo rat mound locations an ANOVA test was conducted. First the assumptions for this test were checked including normality and variance.
@@ -185,14 +184,15 @@ pairwise.wilcox.test(kangaroo_data$seed_count, kangaroo_data$microhabitat, p.adj
 
 ```{r}
 ggplot(data = kangaroo_data, aes(x = microhabitat,y = seed_count)) +
-  geom_bar(stat = "identity", fill = "blue") +
-  theme_bw() +
+  geom_bar(stat = "identity", aes(fill = microhabitat)) +
+  scale_fill_discrete(name = "Mound Location") +
+  theme_classic() +
   labs (x = "Mound Location", y = "Seed Count", title = "Seed Count by Mound Location") +
   theme(
   text = element_text(family = "Times New Roman")  
   )
 ``` 
-
+**Figure 3. Seed Count across Mound Locations.** Mound location on x-axis and seed count on
 
 # Results
 
