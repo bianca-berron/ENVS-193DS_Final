@@ -194,6 +194,8 @@ ggplot(data = kangaroo_data, aes(x = microhabitat,y = seed_count)) +
 ``` 
 **Figure 3. Seed Count across Mound Locations.** Mound location on x-axis and seed count on y-axis. 
 
+vncdsvfdvjvs
+
 # Results
 
 Based on the Kruskal-Wallis test run, we found that total seed number does differ between kangaroo rat mound locations (*H*(3) = 21.93, p \< 0.0001). Pairwise comparisons using the Wilcoxon rank sum test with BH-adjusted p-values was run to compare the total seed counts between mound locations. This revealed that total seed count only differs between B and I (p \< 0.0001), D and I ( p = 0.0026), and E and I mound locations (p = 0.0026), where B = base of kangaroo rat mound on mound, I = interspace between black grama grass clumps off mound, D = surrounding area of kangaroo rat mound on mound, and E = edge of black grama grass clumps off mound.
