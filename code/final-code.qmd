@@ -57,7 +57,7 @@ Next, a visualization of the missing data were created which showed there were n
 ```{r}
 gg_miss_var(kangaroo_data)
 ```
-**Figure 1: Missing Data.** Number of missing data entires on the x-axis and variables on the y-axis. Plots correspond to number of missing data entries for each variable.
+**Figure 1: Missing Data.** Number of missing data entries on the x-axis and variables on the y-axis. Plots correspond to number of missing data entries for each variable.
 
 To determine whether seed numbers differ between kangaroo rat mound locations an ANOVA test was conducted. First the assumptions for this test were checked including normality and variance.
 
@@ -168,13 +168,13 @@ count_var <- leveneTest(seed_count ~ microhabitat, data = kangaroo_data)
 count_var
 ```
 
-Prior to our analysis, we checked assumptions for analysis of variance. We tested for equality of variances between groups using Levene's test and found statistically significant differences in variances between groups (F(3, 1556) = 14.47, p \< 0.0001, a = 0.05). We also visually assessed normality using histograms and QQ plots and statistically tested for normality of seed count using Shapiro-Wilk tests for each mound. All mounds indicated deviations from normality (mound B: W = 0.27, p \< 0.0001, mound D: W = 0.28, p \< 0.0001, mound E: W = 0.34, p \< 0.0001, mound I: W = 0.46, p \< 0.0001). Because of this, a Kruskal-Wallis test was run, as it is a non-parametric alternative to the ANOVA that does not need to meet required assumptions.
+Prior to our analysis, we checked assumptions for analysis of variance. We tested for equality of variances between groups using Levene's test and found statistically significant differences in variances between groups (F(3, 1556) = 14.47, p < 0.0001, a = 0.05). We also visually assessed normality using histograms and QQ plots and statistically tested for normality of seed count using Shapiro-Wilk tests for each mound. All mounds indicated deviations from normality (mound B: W = 0.27, p < 0.0001, mound D: W = 0.28, p < 0.0001, mound E: W = 0.34, p < 0.0001, mound I: W = 0.46, p < 0.0001). Because of this, a Kruskal-Wallis test was run, as it is a non-parametric alternative to the ANOVA that does not need to meet required assumptions.
 
 ```{r}
 kruskal.test(seed_count ~ microhabitat, data = kangaroo_data)
 ```
 
-The results of the Kruskal-Wallis test suggest there are significant differences of seed count between mound locations as the p-value is less than the significance level of 0.05. To determine which pairs of mound locations differ in seed count, a pairwise wilcox test was conducted.
+The results of the Kruskal-Wallis test suggest there are significant differences of seed count between mound locations as the p-value is less than the significance level of 0.05. Therefore, the null hypothesis was rejected. To determine which pairs of mound locations differ in seed count, a pairwise wilcox test was conducted.
 
 ```{r}
 # conduct a pairwise wilcox test to calculate pairwise comparisons between group levels with corrections for multiple testing; "BH" adjustment
@@ -184,11 +184,14 @@ pairwise.wilcox.test(kangaroo_data$seed_count, kangaroo_data$microhabitat, p.adj
 
 # Results
 
-Based on the Kruskal-Wallis test run, we found that total seed number does differ between kangaroo rat mound locations (*H*(3) = 21.93, p \< 0.0001). Pairwise comparisons using the Wilcoxon rank sum test with BH-adjusted p-values was run to compare the total seed counts between mound locations. This revealed that total seed count only differs between B and I (p \< 0.0001), D and I ( p = 0.0026), and E and I mound locations (p = 0.0026), where B = base of kangaroo rat mound on mound, I = interspace between black grama grass clumps off mound, D = surrounding area of kangaroo rat mound on mound, and E = edge of black grama grass clumps off mound.
+Based on the Kruskal-Wallis test run, we found that total seed number does differ between kangaroo rat mound locations (*H*(3) = 21.93, p < 0.0001). Pairwise comparisons using the Wilcoxon rank sum test with BH-adjusted p-values was run to compare the total seed counts between mound locations. This revealed that total seed count only differs between B and I (p < 0.0001), D and I ( p = 0.0026), and E and I mound locations (p = 0.0026), where B = base of kangaroo rat mound on mound, I = interspace between black grama grass clumps off mound, D = surrounding area of kangaroo rat mound on mound, and E = edge of black grama grass clumps off mound.
 
 ```{r}
+# create visualization to show differing seed counts by mound location
 ggplot(data = kangaroo_data, aes(x = microhabitat,y = seed_count)) +
+  # make each bar a different color to differentiate between mound locations
   geom_bar(stat = "identity", aes(fill = microhabitat)) +
+  # change legend title
   scale_fill_discrete(name = "Mound Location") +
   theme_classic() +
   labs (x = "Mound Location", y = "Seed Count", title = "Seed Count by Mound Location") +
