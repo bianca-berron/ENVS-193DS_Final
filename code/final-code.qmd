@@ -184,7 +184,7 @@ pairwise.wilcox.test(kangaroo_data$seed_count, kangaroo_data$microhabitat, p.adj
 
 ```{r}
 ggplot(data = kangaroo_data, aes(x = microhabitat,y = seed_count)) +
-  geom_bar(stat = "identity") +
+  geom_bar(stat = "identity", fill = "blue") +
   theme_bw() +
   labs (x = "Mound Location", y = "Seed Count", title = "Seed Count by Mound Location") +
   theme(
