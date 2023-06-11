@@ -206,26 +206,30 @@ The above figure displays how seed count does vary across mound locations, speci
 # Problem 2
 
 # Introduction
-As the climate continues to change from anthropogenic induced emissions, environmental conditions that determine ecosystem composition alter. In Niwot Ridge, Colorado environmental conditions have began to drift from the status quo due to alterations in temperature, soil moisture, and precipitation (Seaver, 2022). The new state of the environment has made it particularly hospitable for woody shrub establishment, altering the composition of the entire ecosystem to an alpine ecosystem. This phenomena is known as shrubification and could affect the success, and failure, of the different native plant species. Environmental changes that a parrental plant experiences can directly affect their output of seed quantity and the relative seed quality, i.e. seed coat thickness and structure which can influence endosperm reserves for an embryo (Sultan, 2000; Lacey et. al. 1997). The greater number of seeds produced is suggested to greatly improve an organisms fitness as it has a greater chance of successful reproduction (Primack, 1987). Moreover, an increase in seed number also increases the genetic diversity within that species population, increasing species survival (Sulatn, 2000). By understanding what factors predict the seed production/count of a plant, we may better understand how to maintain and restore plant species and ecosystems. Our analysis is particularly interested in how seed count varies based on shrubification (treatment), plant species, and the number of inflorescence on a plant, as well as exploring if these factor represent the simplest model to predict seed count. We will be testing the null hypothesis that shrubification (treatment), species, and number of inflorescence does not predict seed count, with the alternative hypothesis that at least one of these variables does predict seed count.  
+As the climate continues to change from anthropogenic induced emissions, environmental conditions that determine ecosystem composition alter. In Niwot Ridge, Colorado environmental conditions have began to drift from the status quo due to alterations in temperature, soil moisture, and precipitation (Seaver, 2022). The new state of the environment has made it particularly hospitable for woody shrub establishment, altering the composition of the entire ecosystem to an alpine ecosystem. This phenomena is known as shrubification and could affect the success, and failure, of the different native plant species. Environmental changes that a parrental plant experiences can directly affect their output of seed quantity and the relative seed quality, i.e. seed coat thickness and structure which can influence endosperm reserves for an embryo (Sultan, 2000; Lacey et. al. 1997). The greater number of seeds produced is suggested to greatly improve an organisms fitness as it has a greater chance of successful reproduction (Primack, 1987). Moreover, an increase in seed number also increases the genetic diversity within that species population, increasing species survival (Sulatn, 2000). By understanding what factors predict the seed production/count of a plant, we may better understand how to maintain and restore plant species and ecosystems. Our analysis is particularly interested in how seed count varies based on shrubification (treatment), plant species, and the number of inflorescence on a plant, as well as exploring if these factor represent the simplest model to predict seed count. We will be testing the null hypothesis that there is no significant relationship between shrubification (treatment), species, and number of inflorescence as predictors with seed count, with the alternative hypothesis that at least one of these variables does have a significant relationship to explain seed count.  
 
 # Methods
 
 To conduct this study, five alpine species were sampled from 12 pairs of plots, each pair having either an open plot or shrub treatment. Samples were collected in the form of dried buds that were then crushed and the viable seeds were counted and weighed. The individual plants that each dried bud came from was cataloged along with its species and other characteristics to form the data set. To organize the data in a clear fashion, more informative labels were given to each column and only seed count, species, treatment, and total number of inflorescenses data were kept.
 ```{r}
 #read in libraries
+# model packages
+library(MASS) 
+library(lme4)
+library(glmmTMB) 
+library(DHARMa)
+library(MuMIn)
+library(ggeffects)
+library(lmtest)
+library(broom)
 library(tidyverse)
 library(here)
-library(janitor)
-library(ggeffects)
-library(performance)
-library(naniar) 
-library(flextable) 
-library(car)
-library(broom)
-library(corrplot)
-library(AICcmodavg)
+library(naniar)
+library(skimr)
 library(GGally)
-library(MuMIn)
+library(flextable)
+
+
 #read in data
 seed <- read_csv(here("data", "shrubstudy_seed_ctwt.ms.data.csv")) %>% 
   #making column names cleaner
@@ -234,12 +238,19 @@ seed <- read_csv(here("data", "shrubstudy_seed_ctwt.ms.data.csv")) %>%
   select(treatment, species, total_nr_infl, nr_seeds)
   
 ```
-Based on this new data set, a visualization of missing data was created which showed that there were over 100 missing observations for seed count. 
+Next to get acquainted with the data, we created a histogram of seed count:
+```{r}
+ggplot(seed, aes(x = nr_seeds)) +
+  geom_histogram(bins = 17)
+```
+**Figure 4. Histogram of Seed Count** Seed count is represented on the x axis and frequency or count is on the y axis.
+
+This visualization demonstrated the grouping of data, specifically that count tends to be less than 50 throughout the data set. Next, a visualization of missing data was created which showed that there were over 100 missing observations for seed count. 
 ```{r}
 #visualizing the missing data
 gg_miss_var(seed)
 ```
-** Figure 4. Missing Data Visualization** Each column is displayed on the y-axis with the number of missing variables on the x-axis, displaying that the column for number of seeds has missing data.
+** Figure 5. Missing Data Visualization** Each column is displayed on the y-axis with the number of missing variables on the x-axis, displaying that the column for number of seeds has missing data.
 
 Since the visualization indicated missing data within the data set which could interfere with our analysis, we removed all observations with missing data by creating a subset of data.
 ```{r}
@@ -247,26 +258,76 @@ Since the visualization indicated missing data within the data set which could i
 seed_subset <- seed %>% 
   drop_na(nr_seeds)
 ```
-To explore relationships between predictor variables in our new data set, we created a pairs plot rather than a Pearson's r correlation plot because two out of the three predictors are categorical. Based on the plot, none of the predictor variables appear to have a strong relationship with another that could induce colinearity. 
+With this new data set, we further explored each variable by using the skim function.
+```{r}
+#skimming the data frame
+skim(seed_subset)
+```
+This summary reiterated that both treatment and species are categorical predictors, whereas total number of inflorescence is numerical. Additionally, the function presented mean values for each variable across the entire data frame. To explore relationships between predictor variables we created a pairs plot rather than a Pearson's r correlation plot because of the categorical predictors. Based on the plot, none of the predictor variables appear to have a strong relationship with another that could induce colinearity. 
 ```{r}
 #using data subset
 seed_subset %>% 
   #selecting all variables
-  select(treatment: total_nr_infl) %>% 
+  dplyr::select(treatment:total_nr_infl) %>% 
   #creating plot
   ggpairs()
 ```
-**Figure 5: Relationships Between Predictor Variables** Each plot in the grid compares two predictor variables on the x and y axis and creates a visualization.
+**Figure 6. Relationships Between Predictor Variables** Each plot in the grid compares two predictor variables on the x and y axis and creates a visualization.
 
-Now that the data has been organized, clean from missing values, and explored we can now create null and full models to predict seed count and use for analysis. The null model includes no predictors for seed count, whereas the full model will include all three predictor variables and will later be used to assess how seed count varies for each predictor. 
+Since the data has been organized, clean from missing values, and explored we began to address our question of how does seed count vary with plot type(treatment), plant species, and total number of inflorescence and furthermore determine the most accurate and simplest model that can explain seed count. This was done first by creating a series of generalized linear models with different distributions. 
 ```{r}
-#creating models for both null and full
-null <- lm(nr_seeds ~ 1, data = seed_subset)
-full <- lm(nr_seeds ~ species + treatment + total_nr_infl, data = seed_subset)
+#creating a linear model
+seed1 <- lm(nr_seeds ~ treatment + species + total_nr_infl, data = seed_subset)
+#creating a generalized linear model with poisson distribution
+seed2 <- glm(nr_seeds ~ treatment + species + total_nr_infl, data = seed_subset, family = "poisson")
+#creating a glm with negative binomial distribution
+seed3 <- glm.nb(nr_seeds ~ treatment + species + total_nr_infl, data = seed_subset)
+
 ```
+We then checked the assumptions of generalized linear models visually by looking for randomly distributed residuals and normality.
+```{r}
+#| fig.height: 6
+#| fig.width: 8
+#| fig.align: center
+# check diagnostics of first model which is a linear regression
+plot(simulateResiduals(seed1))
+```
+**Figure 7. Linear Model Diagnostics** The left plot displays normality of data and the right displays randomness of residuals.
 
+Based on the visualization, the linear model does not conform to the data as it is not normally distributed and is not homoscedastic. We next checked the second model, a generalized linear model with a poisson distribution.
+```{r}
+#| fig.height: 6
+#| fig.width: 8
+#| fig.align: center
+#check diagnostics of second model
+plot(simulateResiduals(seed2))
+```
+**Figure 8. Generalized Linear Model 2 Diagnostics** The left plot displays normality of data and the right displays randomness of residuals.
 
+Again, the visualization indicates that the data is not normally distributed and is not homoscedastic. We then tried the third model, a generalized linear model with a negative binomial distribution.
+```{r}
+#| fig.height: 6
+#| fig.width: 8
+#| fig.align: center
+#check diagnostics of the third model
+plot(simulateResiduals(seed3))
+```
+**Figure 9. Generalized Linear Model 3 Diagnostics** The left plot displays normality of data and the right displays randomness of residuals.
 
+This visualization displayed the most normally distributed data with residuals that were randomly dispersed evenly. To confidently determine the best model to use, we will used Akaike’s Information Criterion (AIC) values. AIC factor in both the predictability and complexity of each model, reporting the lowest AIC value to the model which predicts the most about seed count in the simplest way. This model was the generalized linear model (GLM) with the negative binomial distribution, model 3.
+```{r}
+#selecting best model based on AIC value
+model.sel(seed1, seed2, seed3)
+```
+Next, since we are confident in using the GLM with a negative binomial we then explored other models with fewer predictors that fit this same form.
+```{r}
+#creating models with only treatment and infl as predictors
+seed3_a <- glm.nb(nr_seeds ~ treatment + total_nr_infl, data = seed_subset)
+#model with only treatment and species as predictors
+seed3_b <- glm.nb(nr_seeds ~ treatment + species, data = seed_subset)
+#model with only species and infl as predictors
+seed3_c <- glm.nb(nr_seeds ~ species + total_nr_infl, data = seed_subset)
+```
 
 
 # Works Cited
