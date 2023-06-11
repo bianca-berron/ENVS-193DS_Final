@@ -96,6 +96,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="final-code_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="final-code_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="final-code_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="final-code_files/libs/tabwid-1.1.3/tabwid.css" rel="stylesheet">
+<script src="final-code_files/libs/tabwid-1.1.3/tabwid.js"></script>
 
 
 </head>
@@ -115,6 +117,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
   <li><a href="#problem-2" id="toc-problem-2" class="nav-link" data-scroll-target="#problem-2">Problem 2</a></li>
   <li><a href="#introduction-1" id="toc-introduction-1" class="nav-link" data-scroll-target="#introduction-1">Introduction</a></li>
+  <li><a href="#methods-1" id="toc-methods-1" class="nav-link" data-scroll-target="#methods-1">Methods</a></li>
+  <li><a href="#results-1" id="toc-results-1" class="nav-link" data-scroll-target="#results-1">Results</a></li>
   <li><a href="#works-cited" id="toc-works-cited" class="nav-link" data-scroll-target="#works-cited">Works Cited</a></li>
   </ul>
 </nav>
@@ -424,20 +428,563 @@ P value adjustment method: BH </code></pre>
 </section>
 <section id="introduction-1" class="level1">
 <h1>Introduction</h1>
-<ul>
-<li>shrubification, increase in woody shrub that changes the composition of an ecosystem, due to climate change induced alterations in precipitation, temperature, and soil moisture, more establishment and colonization of woody shrubs to create an alpine ecosystem[4] -how will plant reproduction be affected by this, which will increase seed distribution and is this a determining factor for plant reproductive success</li>
-<li>plants will respond to environmental change through quanitity and quality of their seed provision, can change the structure and thickness of seet coat which influence the endosperm and provisions that the embryo has access to [5]</li>
-<li>studies conducted suggest that parental temperature significantly determines seed coat and seed mass but not embryo mass</li>
-<li>amount of seeds created increases genetic variety in the population and increased survival [5]</li>
-<li>individual plant would reach maximum fitness by producing an infinite number of seeds, is a determining factor in the success of seedling establishment in an environment</li>
-</ul>
+<p>As the climate continues to change from anthropogenic induced emissions, environmental conditions that determine ecosystem composition alter. In Niwot Ridge, Colorado environmental conditions have began to drift from the status quo due to alterations in temperature, soil moisture, and precipitation (Seaver, 2022). The new state of the environment has made it particularly hospitable for woody shrub establishment, altering the composition of the entire ecosystem to an alpine ecosystem. This phenomena is known as shrubification and could affect the success, and failure, of the different native plant species. Environmental changes that a parrental plant experiences can directly affect their output of seed quantity and the relative seed quality, i.e.&nbsp;seed coat thickness and structure which can influence endosperm reserves for an embryo (Sultan, 2000; Lacey et. al.&nbsp;1997). The greater number of seeds produced is suggested to greatly improve an organisms fitness as it has a greater chance of successful reproduction (Primack, 1987). Moreover, an increase in seed number also increases the genetic diversity within that species population, increasing species survival (Sulatn, 2000). By understanding what factors predict the seed production/count of a plant, we may better understand how to maintain and restore plant species and ecosystems. Our analysis is particularly interested in how seed count varies based on shrubification (treatment), plant species, and the number of inflorescence on a plant, as well as exploring if these factor represent the simplest model to predict seed count. We will be testing the null hypothesis that there is no significant relationship between shrubification (treatment), species, and number of inflorescence as predictors with seed count, with the alternative hypothesis that at least one of these variables does have a significant relationship to explain seed count.</p>
+</section>
+<section id="methods-1" class="level1">
+<h1>Methods</h1>
+<p>To conduct this study, five alpine species were sampled from 12 pairs of plots, each pair having either an open plot or shrub treatment. Samples were collected in the form of dried buds that were then crushed and the viable seeds were counted and weighed. The individual plants that each dried bud came from was cataloged along with its species and other characteristics to form the data set. To organize the data in a clear fashion, more informative labels were given to each column and only seed count, species, treatment, and total number of inflorescenses data were kept.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">#read in libraries</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co"># model packages</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS) </span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glmmTMB) </span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DHARMa)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MuMIn)</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggeffects)</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmtest)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(naniar)</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally)</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flextable)</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a><span class="co">#read in data</span></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>seed <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"shrubstudy_seed_ctwt.ms.data.csv"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>  <span class="co">#making column names cleaner</span></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>  <span class="co">#only keeping columns needed</span></span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(treatment, species, total_nr_infl, nr_seeds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Next to get acquainted with the data, we created a histogram of seed count:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(seed, <span class="fu">aes</span>(<span class="at">x =</span> nr_seeds)) <span class="sc">+</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">17</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="final-code_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Figure 4. Histogram of Seed Count</strong> Seed count is represented on the x axis and frequency or count is on the y axis.</p>
+<p>This visualization demonstrated the grouping of data, specifically that count tends to be less than 50 throughout the data set. Next, a visualization of missing data was created which showed that there were over 100 missing observations for seed count.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">#visualizing the missing data</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gg_miss_var</span>(seed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="final-code_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>** Figure 5. Missing Data Visualization** Each column is displayed on the y-axis with the number of missing variables on the x-axis, displaying that the column for number of seeds has missing data.</p>
+<p>Since the visualization indicated missing data within the data set which could interfere with our analysis, we removed all observations with missing data by creating a subset of data.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">#creating a subset of the data frame without missing values</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>seed_subset <span class="ot">&lt;-</span> seed <span class="sc">%&gt;%</span> </span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(nr_seeds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>With this new data set, we further explored each variable by using the skim function.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">#skimming the data frame</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(seed_subset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped">
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Name</td>
+<td style="text-align: left;">seed_subset</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Number of rows</td>
+<td style="text-align: left;">182</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Number of columns</td>
+<td style="text-align: left;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">_______________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Column type frequency:</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">character</td>
+<td style="text-align: left;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">________________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Group variables</td>
+<td style="text-align: left;">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table class="table table-sm table-striped">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 13%">
+<col style="width: 19%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 8%">
+<col style="width: 12%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: right;">min</th>
+<th style="text-align: right;">max</th>
+<th style="text-align: right;">empty</th>
+<th style="text-align: right;">n_unique</th>
+<th style="text-align: right;">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">treatment</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">species</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table class="table table-sm table-striped">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 12%">
+<col style="width: 17%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 3%">
+<col style="width: 6%">
+<col style="width: 5%">
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">sd</th>
+<th style="text-align: right;">p0</th>
+<th style="text-align: right;">p25</th>
+<th style="text-align: right;">p50</th>
+<th style="text-align: right;">p75</th>
+<th style="text-align: right;">p100</th>
+<th style="text-align: left;">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">total_nr_infl</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">7.15</td>
+<td style="text-align: right;">12.56</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">2.5</td>
+<td style="text-align: right;">7.00</td>
+<td style="text-align: right;">117</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">nr_seeds</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">14.55</td>
+<td style="text-align: right;">28.62</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.25</td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">13.75</td>
+<td style="text-align: right;">285</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>This summary reiterated that both treatment and species are categorical predictors, whereas total number of inflorescence is numerical. Additionally, the function presented mean values for each variable across the entire data frame. To explore relationships between predictor variables we created a pairs plot rather than a Pearson’s r correlation plot because of the categorical predictors. Based on the plot, none of the predictor variables appear to have a strong relationship with another that could induce colinearity.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">#using data subset</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>seed_subset <span class="sc">%&gt;%</span> </span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#selecting all variables</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(treatment<span class="sc">:</span>total_nr_infl) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">#creating plot</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggpairs</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="final-code_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Figure 6. Relationships Between Predictor Variables</strong> Each plot in the grid compares two predictor variables on the x and y axis and creates a visualization.</p>
+<p>Since the data has been organized, clean from missing values, and explored we began to address our question of how does seed count vary with plot type(treatment), plant species, and total number of inflorescence and furthermore determine the most accurate and simplest model that can explain seed count. This was done first by creating a series of generalized linear models with different distributions.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co">#creating a linear model</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>seed1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(nr_seeds <span class="sc">~</span> treatment <span class="sc">+</span> species <span class="sc">+</span> total_nr_infl, <span class="at">data =</span> seed_subset)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co">#creating a generalized linear model with poisson distribution</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>seed2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(nr_seeds <span class="sc">~</span> treatment <span class="sc">+</span> species <span class="sc">+</span> total_nr_infl, <span class="at">data =</span> seed_subset, <span class="at">family =</span> <span class="st">"poisson"</span>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co">#creating a glm with negative binomial distribution</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>seed3 <span class="ot">&lt;-</span> <span class="fu">glm.nb</span>(nr_seeds <span class="sc">~</span> treatment <span class="sc">+</span> species <span class="sc">+</span> total_nr_infl, <span class="at">data =</span> seed_subset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>We then checked the assumptions of generalized linear models visually by looking for randomly distributed residuals and normality.</p>
+<div class="cell" data-layout-align="center">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check diagnostics of first model which is a linear regression</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(seed1))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="final-code_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Figure 7. Linear Model Diagnostics</strong> The left plot displays normality of data and the right displays randomness of residuals.</p>
+<p>Based on the visualization, the linear model does not conform to the data as it is not normally distributed and is not homoscedastic. We next checked the second model, a generalized linear model with a poisson distribution.</p>
+<div class="cell" data-layout-align="center">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">#check diagnostics of second model</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(seed2))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="final-code_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Figure 8. Generalized Linear Model 2 Diagnostics</strong> The left plot displays normality of data and the right displays randomness of residuals.</p>
+<p>Again, the visualization indicates that the data is not normally distributed and is not homoscedastic. We then tried the third model, a generalized linear model with a negative binomial distribution.</p>
+<div class="cell" data-layout-align="center">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">#check diagnostics of the third model</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(seed3))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="final-code_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Figure 9. Generalized Linear Model 3 Diagnostics</strong> The left plot displays normality of data and the right displays randomness of residuals.</p>
+<p>This visualization displayed the most normally distributed data with residuals that were randomly dispersed evenly. To confidently determine the best model to use, we will used Akaike’s Information Criterion (AIC) values. AIC factor in both the predictability and complexity of each model, reporting the lowest AIC value to the model which predicts the most about seed count in the simplest way. This model was the generalized linear model (GLM) with the negative binomial distribution, model 3.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co">#selecting best model based on AIC value</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">model.sel</span>(seed1, seed2, seed3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Model selection table 
+       (Int) spc ttl_nr_inf trt       family  class init.theta link df
+seed3  1.918   +    0.07499   + NB(1.5049,l) negbin        1.5  log  9
+seed1 -2.567   +    2.15000   +         g(i)     lm                  9
+seed2  2.549   +    0.02989   +         p(l)    glm                  8
+         logLik AICc   delta weight
+seed3  -556.455 1132    0.00      1
+seed1  -692.468 1404  272.03      0
+seed2 -1150.107 2317 1185.09      0
+Abbreviations:
+ family: g(i) = 'gaussian(identity)', 
+         NB(1.5049,l) = 'Negative Binomial(1.5049,log)', p(l) = 'poisson(log)'
+Models ranked by AICc(x) </code></pre>
+</div>
+</div>
+<p>Next, since we are confident in using the GLM with a negative binomial we then explored other models with fewer predictors that fit this same form.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co">#creating models with only treatment and infl as predictors</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>seed3_a <span class="ot">&lt;-</span> <span class="fu">glm.nb</span>(nr_seeds <span class="sc">~</span> treatment <span class="sc">+</span> total_nr_infl, <span class="at">data =</span> seed_subset)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="co">#model with only treatment and species as predictors</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>seed3_b <span class="ot">&lt;-</span> <span class="fu">glm.nb</span>(nr_seeds <span class="sc">~</span> treatment <span class="sc">+</span> species, <span class="at">data =</span> seed_subset)</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="co">#model with only species and infl as predictors</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>seed3_c <span class="ot">&lt;-</span> <span class="fu">glm.nb</span>(nr_seeds <span class="sc">~</span> species <span class="sc">+</span> total_nr_infl, <span class="at">data =</span> seed_subset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>All of these models were checked visually to meet the required assumptions.</p>
+<div class="cell" data-layout-align="center">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">simulateResiduals</span>(seed3_a, <span class="at">plot =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="final-code_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Object of Class DHARMa with simulated residuals based on 250 simulations with refit = FALSE . See ?DHARMa::simulateResiduals for help. 
+ 
+Scaled residual values: 0.5985781 0.2369761 0.6073598 0.1989777 0.8108107 0.8652213 0.722944 0.6595381 0.8010041 0.996 0.8756964 0.7909078 0.962469 0.5144915 0.9642997 0.2697532 0.8224198 0.6896929 0.7497912 0.4019165 ...</code></pre>
+</div>
+</div>
+<p><strong>Figure 10. Generalized Linear Model 3.a Diagnostics</strong> The left plot displays normality of data and the right displays randomness of residuals.</p>
+<p>The plot appeared to be homoscedastic and uniform.</p>
+<div class="cell" data-layout-align="center">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">simulateResiduals</span>(seed3_b, <span class="at">plot =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="final-code_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Object of Class DHARMa with simulated residuals based on 250 simulations with refit = FALSE . See ?DHARMa::simulateResiduals for help. 
+ 
+Scaled residual values: 0.9324214 0.7371427 0.9580447 0.1867698 0.8169644 0.7758247 0.6754601 0.3935522 0.4752359 0.6571672 0.4759411 0.4216924 0.7252339 0.2593727 0.8075793 0.7395959 0.7541286 0.5658095 0.6817916 0.1681556 ...</code></pre>
+</div>
+</div>
+<p><strong>Figure 11. Generalized Linear Model 3.b Diagnostics</strong> The left plot displays normality of data and the right displays randomness of residuals.</p>
+<p>The plot appeared to be extremely uniform and homoscedastic.</p>
+<div class="cell" data-layout-align="center">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">simulateResiduals</span>(seed3_c, <span class="at">plot =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="final-code_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Object of Class DHARMa with simulated residuals based on 250 simulations with refit = FALSE . See ?DHARMa::simulateResiduals for help. 
+ 
+Scaled residual values: 0.9514119 0.5643098 0.944177 0.004826512 0.7880112 0.8409382 0.65073 0.4596078 0.5714663 0.568051 0.7362462 0.6730602 0.9350107 0.3719007 0.9387881 0.7055389 0.7340206 0.4960083 0.5669025 0.2005985 ...</code></pre>
+</div>
+</div>
+<p><strong>Figure 12. Generalized Linear Model 3.c Diagnostics</strong> The left plot displays normality of data and the right displays randomness of residuals.</p>
+<p>The plot appeared to be relatively uniform and homoscedastic. We then compared all of the generalized linear models with negative binomial distributions with each other using AIC and found model 3b to be the lowest which only has predictor variables treatment and species.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co">#comparing all negative binomial glms</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">model.sel</span>(seed3, seed3_a, seed3_b, seed3_c)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Model selection table 
+        (Int) spc ttl_nr_inf trt       family init.theta df   logLik   AICc
+seed3   1.918   +    0.07499   + NB(1.5049,l)        1.5  9 -556.455 1132.0
+seed3_c 1.786   +    0.07507     NB(1.4288,l)       1.43  8 -559.322 1135.5
+seed3_a 1.578        0.09007   + NB(1.0221,l)       1.02  4 -582.869 1174.0
+seed3_b 3.706   +              + NB(0.7556,l)      0.756  8 -603.151 1223.1
+        delta weight
+seed3    0.00  0.853
+seed3_c  3.52  0.147
+seed3_a 42.01  0.000
+seed3_b 91.18  0.000
+Abbreviations:
+ family: NB(0.7556,l) = 'Negative Binomial(0.7556,log)', 
+         NB(1.0221,l) = 'Negative Binomial(1.0221,log)', 
+         NB(1.4288,l) = 'Negative Binomial(1.4288,log)', 
+         NB(1.5049,l) = 'Negative Binomial(1.5049,log)'
+Models ranked by AICc(x) </code></pre>
+</div>
+</div>
+</section>
+<section id="results-1" class="level1">
+<h1>Results</h1>
+<p>We found that model 3b which used treatment and species as predictor variables for seed count to be the most suitable. This model was chosen because it met all assumptions of generalized linear regression and has the lowest AIC value in comparison to all other models, implying that it best explains the response variable in the simplest way. The model summary is displayed here:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co">#displaying model summary</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(seed3_b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm.nb(formula = nr_seeds ~ treatment + species, data = seed_subset, 
+    init.theta = 0.7555861374, link = log)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-2.3518  -1.1203  -0.3413   0.1850   3.0659  
+
+Coefficients:
+               Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)      3.7064     0.2556  14.498  &lt; 2e-16 ***
+treatmentshrub  -0.3528     0.1901  -1.856  0.06352 .  
+speciesCARRUP   -3.2736     0.3487  -9.389  &lt; 2e-16 ***
+speciesGEUROS   -1.8171     0.3082  -5.895 3.75e-09 ***
+speciesKOBMYO   -0.6193     0.2930  -2.114  0.03452 *  
+speciesMINOBT   -0.8756     0.3067  -2.855  0.00431 ** 
+speciesTRIDAS    0.2573     1.1900   0.216  0.82879    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for Negative Binomial(0.7556) family taken to be 1)
+
+    Null deviance: 314.46  on 181  degrees of freedom
+Residual deviance: 206.88  on 175  degrees of freedom
+AIC: 1222.3
+
+Number of Fisher Scoring iterations: 1
+
+              Theta:  0.7556 
+          Std. Err.:  0.0872 
+
+ 2 x log-likelihood:  -1206.3020 </code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>seed3_b_table <span class="ot">&lt;-</span> <span class="fu">tidy</span>(seed3_b) <span class="sc">%&gt;%</span> </span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># making p values round to three decimals and only state whether they are less than   0.001</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">p.value =</span> <span class="fu">round</span>(p.value, <span class="dv">3</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># make p.value a character to adjust column to show rounded values and p-values less than 0.001</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">p.value =</span> <span class="fu">case_when</span>(</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>    p.value <span class="sc">&lt;</span> <span class="fl">0.001</span> <span class="sc">~</span> <span class="st">"&lt;0.001"</span>, <span class="cn">TRUE</span> <span class="sc">~</span> <span class="fu">as.character</span>(p.value))) <span class="sc">%&gt;%</span> </span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>   <span class="co"># using mutate to round each column</span></span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(<span class="st">"estimate"</span>, <span class="st">"std.error"</span>, <span class="st">"statistic"</span>), round, <span class="dv">3</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">flextable</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># edit labels</span></span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_header_labels</span>(<span class="at">term =</span> <span class="st">"Term"</span>, </span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>                      <span class="at">estimate =</span> <span class="st">"Estimate"</span>,</span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>                      <span class="at">std.error =</span> <span class="st">"Standard Error"</span>,</span>
+<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a>                      <span class="at">statistic =</span> <span class="st">"Z Value"</span>,</span>
+<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a>                      <span class="at">p.value =</span> <span class="st">"P-value"</span>)</span>
+<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a>seed3_b_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+<div class="tabwid"><style>.cl-b42fe652{}.cl-b42b2cf2{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-b42d12a6{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-b42d12ba{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-b42d1f9e{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b42d1fa8{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b42d1fa9{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b42d1fb2{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b42d1fb3{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b42d1fb4{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-b42fe652"><thead><tr style="overflow-wrap:break-word;"><th class="cl-b42d1f9e"><p class="cl-b42d12a6"><span class="cl-b42b2cf2">Term</span></p></th><th class="cl-b42d1fa8"><p class="cl-b42d12ba"><span class="cl-b42b2cf2">Estimate</span></p></th><th class="cl-b42d1fa8"><p class="cl-b42d12ba"><span class="cl-b42b2cf2">Standard Error</span></p></th><th class="cl-b42d1fa8"><p class="cl-b42d12ba"><span class="cl-b42b2cf2">Z Value</span></p></th><th class="cl-b42d1f9e"><p class="cl-b42d12a6"><span class="cl-b42b2cf2">P-value</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-b42d1fa9"><p class="cl-b42d12a6"><span class="cl-b42b2cf2">(Intercept)</span></p></td><td class="cl-b42d1fb2"><p class="cl-b42d12ba"><span class="cl-b42b2cf2">3.706</span></p></td><td class="cl-b42d1fb2"><p class="cl-b42d12ba"><span class="cl-b42b2cf2">0.256</span></p></td><td class="cl-b42d1fb2"><p class="cl-b42d12ba"><span class="cl-b42b2cf2">14.498</span></p></td><td class="cl-b42d1fa9"><p class="cl-b42d12a6"><span class="cl-b42b2cf2">&lt;0.001</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b42d1fa9"><p class="cl-b42d12a6"><span class="cl-b42b2cf2">treatmentshrub</span></p></td><td class="cl-b42d1fb2"><p class="cl-b42d12ba"><span class="cl-b42b2cf2">-0.353</span></p></td><td class="cl-b42d1fb2"><p class="cl-b42d12ba"><span class="cl-b42b2cf2">0.190</span></p></td><td class="cl-b42d1fb2"><p class="cl-b42d12ba"><span class="cl-b42b2cf2">-1.856</span></p></td><td class="cl-b42d1fa9"><p class="cl-b42d12a6"><span class="cl-b42b2cf2">0.064</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b42d1fa9"><p class="cl-b42d12a6"><span class="cl-b42b2cf2">speciesCARRUP</span></p></td><td class="cl-b42d1fb2"><p class="cl-b42d12ba"><span class="cl-b42b2cf2">-3.274</span></p></td><td class="cl-b42d1fb2"><p class="cl-b42d12ba"><span class="cl-b42b2cf2">0.349</span></p></td><td class="cl-b42d1fb2"><p class="cl-b42d12ba"><span class="cl-b42b2cf2">-9.389</span></p></td><td class="cl-b42d1fa9"><p class="cl-b42d12a6"><span class="cl-b42b2cf2">&lt;0.001</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b42d1fa9"><p class="cl-b42d12a6"><span class="cl-b42b2cf2">speciesGEUROS</span></p></td><td class="cl-b42d1fb2"><p class="cl-b42d12ba"><span class="cl-b42b2cf2">-1.817</span></p></td><td class="cl-b42d1fb2"><p class="cl-b42d12ba"><span class="cl-b42b2cf2">0.308</span></p></td><td class="cl-b42d1fb2"><p class="cl-b42d12ba"><span class="cl-b42b2cf2">-5.895</span></p></td><td class="cl-b42d1fa9"><p class="cl-b42d12a6"><span class="cl-b42b2cf2">&lt;0.001</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b42d1fa9"><p class="cl-b42d12a6"><span class="cl-b42b2cf2">speciesKOBMYO</span></p></td><td class="cl-b42d1fb2"><p class="cl-b42d12ba"><span class="cl-b42b2cf2">-0.619</span></p></td><td class="cl-b42d1fb2"><p class="cl-b42d12ba"><span class="cl-b42b2cf2">0.293</span></p></td><td class="cl-b42d1fb2"><p class="cl-b42d12ba"><span class="cl-b42b2cf2">-2.114</span></p></td><td class="cl-b42d1fa9"><p class="cl-b42d12a6"><span class="cl-b42b2cf2">0.035</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b42d1fa9"><p class="cl-b42d12a6"><span class="cl-b42b2cf2">speciesMINOBT</span></p></td><td class="cl-b42d1fb2"><p class="cl-b42d12ba"><span class="cl-b42b2cf2">-0.876</span></p></td><td class="cl-b42d1fb2"><p class="cl-b42d12ba"><span class="cl-b42b2cf2">0.307</span></p></td><td class="cl-b42d1fb2"><p class="cl-b42d12ba"><span class="cl-b42b2cf2">-2.855</span></p></td><td class="cl-b42d1fa9"><p class="cl-b42d12a6"><span class="cl-b42b2cf2">0.004</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b42d1fb3"><p class="cl-b42d12a6"><span class="cl-b42b2cf2">speciesTRIDAS</span></p></td><td class="cl-b42d1fb4"><p class="cl-b42d12ba"><span class="cl-b42b2cf2">0.257</span></p></td><td class="cl-b42d1fb4"><p class="cl-b42d12ba"><span class="cl-b42b2cf2">1.190</span></p></td><td class="cl-b42d1fb4"><p class="cl-b42d12ba"><span class="cl-b42b2cf2">0.216</span></p></td><td class="cl-b42d1fb3"><p class="cl-b42d12a6"><span class="cl-b42b2cf2">0.829</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+<p>The model states that treatment and species (aside from “TRIDAS”) have a significant relationship with seed count which is denoted by the p-value from the Z statistic for that variable. This relationship is described by estimates of coefficients that give insight into the direction and strength of the relationship. Confidence intervals for each variable in describing its relationship to seed count is shown below.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># confidence intervals</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(seed3_b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>                    2.5 %      97.5 %
+(Intercept)     3.2527339  4.22656892
+treatmentshrub -0.7225292  0.02288965
+speciesCARRUP  -3.9625480 -2.60549229
+speciesGEUROS  -2.4379210 -1.22225041
+speciesKOBMYO  -1.2118519 -0.06147120
+speciesMINOBT  -1.4965401 -0.27850378
+speciesTRIDAS  -1.5367074  3.80558289</code></pre>
+</div>
+</div>
+<p>The coefficient of determination for the model is 0.45 with a significance level of 0.05 out of a sampling of 182 plants, indicating that 45% of variance in seed count data can be explained by this model.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># adjusted R2</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">r.squaredGLMM</span>(seed3_b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>                R2m       R2c
+delta     0.4477142 0.4477142
+lognormal 0.5640701 0.5640701
+trigamma  0.2932060 0.2932060</code></pre>
+</div>
+</div>
+<div class="cell">
+
+</div>
+<p>Moreover, the model suggests that the plant species “CARRUP” or <em>Carex rupestris ssp. drummondiana</em> has a significant negative relationship, where if all else is held constant, seed count is expected decrease by -3.3 units (with a standard error of .26). This negative relationship to seed count is consistent across the majority of species and can be visualized below:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(seed3_b, <span class="fu">aes</span>(<span class="at">x =</span> species, <span class="at">y =</span> nr_seeds, <span class="at">fill =</span> treatment)) <span class="sc">+</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="fu">position_dodge</span>()) <span class="sc">+</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"control"</span> <span class="ot">=</span> <span class="st">"blue"</span>, <span class="st">"shrub"</span> <span class="ot">=</span> <span class="st">"green"</span>)) <span class="sc">+</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"control"</span> <span class="ot">=</span> <span class="st">"blue"</span>, <span class="st">"shrub"</span> <span class="ot">=</span> <span class="st">"green"</span>)) <span class="sc">+</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Species"</span>, <span class="at">y =</span> <span class="st">"Seed Count"</span>, <span class="at">title =</span> <span class="st">"Seed Count Varied by Species and Treatment"</span>, </span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Treatment"</span>, <span class="at">color =</span> <span class="st">"Treatment"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="final-code_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Figure 13. Seed Count Varied by Species and Treatment</strong> The y-axis measures seed count, the x-axis is seperated by individual plant species, and the green bars represent the shrub treatment and blue bars represent the control treatment.</p>
+<p>From the visualization it can be extrapolated that seed counts are larger for “AREFEN”, “CARRUP”, “GUEROS”, and “KOBMYO”in the control treatment, explaining the shrub treatment’s negative relationship towards seed count. Furthermore, it is apparent that seed count stays relatively similar for each treatment based on the species, with the exception of “AREFEN”.</p>
 </section>
 <section id="works-cited" class="level1">
 <h1>Works Cited</h1>
 <p>Davidson, A.D., and D.C. Lightfoot. “Burrowing Rodents Increase Landscape Heterogeneity in a Desert Grassland.” Journal of Arid Environments, vol.&nbsp;72, no. 7, 2008, pp.&nbsp;1133–1145, https://doi.org/10.1016/j.jaridenv.2007.12.015.</p>
 <p>Guo, Qinfeng. “Effects of Bannertail Kangaroo Rat Mounds on Small-Scale Plant Community Structure.” Oecologia, vol.&nbsp;106, no. 2, 1996, pp.&nbsp;247–256, https://doi.org/10.1007/bf00328605.</p>
 <p>Moorhead, D. L., et al.&nbsp;“Cover of Spring Annuals on Nitrogen-Rich Kangaroo Rat Mounds in a Chihuahuan Desert Grassland.” American Midland Naturalist, vol.&nbsp;120, no. 2, 1988, p.&nbsp;443, https://doi.org/10.2307/2426018.</p>
-<p>[4] actual paper [5]Phenotypic plasticity for plant development, function and life history [6] https://bsapubs.onlinelibrary.wiley.com/doi/epdf/10.2307/2446624?src=getftr [7] https://www.annualreviews.org/doi/pdf/10.1146/annurev.es.18.110187.002205</p>
+<p>Seaver, M. 2022. Individual and community flowering phenology, seed counts and pollinator visitation rates in shrub and open plots across Niwot Ridge, 2019 - 2021. ver 1. Environmental Data Initiative. https://doi.org/10.6073/pasta/edc4ab2faf7dd96cd1deac1544d5f2b9 (Accessed 2023-06-10).</p>
+<p>Sultan, Sonia E. “Phenotypic Plasticity for Plant Development, Function and Life History.” Trends in Plant Science, vol.&nbsp;5, no. 12, 2000, pp.&nbsp;537–542, https://doi.org/10.1016/s1360-1385(00)01797-0.</p>
+<p>Lacey, Elizabeth P., et al.&nbsp;“Parental Effects on Seed Mass: Seed Coat but Not Embryo/Endosperm Effects.” American Journal of Botany, vol.&nbsp;84, no. 11, 1997, pp.&nbsp;1617–1620, https://doi.org/10.2307/2446624.</p>
+<p>Primack, Richard B. “Relationships among Flowers, Fruits, and Seeds.” Annual Review of Ecology and Systematics, vol.&nbsp;18, no. 1, 1987, pp.&nbsp;409–430, https://doi.org/10.1146/annurev.es.18.110187.002205.</p>
 </section>
 
 </main>

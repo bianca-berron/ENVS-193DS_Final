@@ -239,7 +239,8 @@ seed <- read_csv(here("data", "shrubstudy_seed_ctwt.ms.data.csv")) %>%
   #making column names cleaner
   clean_names() %>% 
   #only keeping columns needed
-  select(treatment, species, total_nr_infl, nr_seeds)
+  dplyr::select(treatment, species, total_nr_infl, nr_seeds)
+  
   
 ```
 
@@ -405,18 +406,27 @@ We found that model 3b which used treatment and species as predictor variables f
 summary(seed3_b)
 ```
 
+
 ```{r}
-#creating table of summary
-seed3_b %>% 
-  as_flextable() %>% 
-  mutate("Pr(>|z|)" = round("Pr(>|z|)", 3)) %>% 
-    #making p values round to three decimals and only state whether they are less than .001
-    mutate("Pr(>|z|)" = case_when(
-    "Pr(>|z|)" < 0.001 ~ "< 0.001", TRUE ~ as.character("Pr(>|z|)")  
-  )) %>% 
-  # using mutate to round each column
-    mutate(across(c("Estimate", "Standard Error", "z value"), round, 3)) 
+seed3_b_table <- tidy(seed3_b) %>% 
+  # making p values round to three decimals and only state whether they are less than   0.001
+  mutate(p.value = round(p.value, 3)) %>%
+  # make p.value a character to adjust column to show rounded values and p-values less than 0.001
+  mutate(p.value = case_when(
+    p.value < 0.001 ~ "<0.001", TRUE ~ as.character(p.value))) %>% 
+   # using mutate to round each column
+  mutate(across(c("estimate", "std.error", "statistic"), round, 3)) %>% 
+  flextable() %>% 
+  # edit labels
+  set_header_labels(term = "Term", 
+                      estimate = "Estimate",
+                      std.error = "Standard Error",
+                      statistic = "Z Value",
+                      p.value = "P-value")
+
+seed3_b_table
 ```
+
 
 The model states that treatment and species (aside from "TRIDAS") have a significant relationship with seed count which is denoted by the p-value from the Z statistic for that variable. This relationship is described by estimates of coefficients that give insight into the direction and strength of the relationship. Confidence intervals for each variable in describing its relationship to seed count is shown below.
 
