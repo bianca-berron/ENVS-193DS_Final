@@ -206,10 +206,64 @@ The above figure displays how seed count does vary across mound locations, speci
 # Problem 2
 
 # Introduction
-As the climate continues to change from anthropogenic induced emissions, environmental conditions that determine ecosystem composition alter. In Niwot Ridge, Colorado environmental conditions have began to drift from the status quo due to alterations in temperature, soil moisture, and precipitation [1]. The new state of the environment has made it particularly hospitable for woody shrub establishment, altering the composition of the entire ecosystem to an alpine ecosystem. This phenomena is known as shrubification and could affect the success, and failure, of the different native plant species. Environmental changes that a parrental plant experiences can directly affect their output of seed quantity and the relative seed quality, i.e. seed coat thickness and structure which can influence endosperm reserves for an embryo [5, 6]. The greater number of seeds produced is suggested to greatly improve an organisms fitness as it has a greater chance of successful reproduction [7]. Moreover, an increase in seed number also increases the genetic diversity within that species population, increasing species survival [5]. By understanding what factors predict the seed production/count of a plant, we may better understand how to maintain and restore plant species and ecosystems. Our analysis is particularly interested in how seed count varies based on shrubification, plant species, and the number of inflorescence on a plant, as well as exploring if these factor represent the simplest model to predict seed count. We will be testing the null hypothesis that shrubification (treatment), species, and number of inflorescence does not predict seed count, with the alternative hypothesis that at keast one of these variables does predict seed count.  
+As the climate continues to change from anthropogenic induced emissions, environmental conditions that determine ecosystem composition alter. In Niwot Ridge, Colorado environmental conditions have began to drift from the status quo due to alterations in temperature, soil moisture, and precipitation (Seaver, 2022). The new state of the environment has made it particularly hospitable for woody shrub establishment, altering the composition of the entire ecosystem to an alpine ecosystem. This phenomena is known as shrubification and could affect the success, and failure, of the different native plant species. Environmental changes that a parrental plant experiences can directly affect their output of seed quantity and the relative seed quality, i.e. seed coat thickness and structure which can influence endosperm reserves for an embryo (Sultan, 2000; Lacey et. al. 1997). The greater number of seeds produced is suggested to greatly improve an organisms fitness as it has a greater chance of successful reproduction (Primack, 1987). Moreover, an increase in seed number also increases the genetic diversity within that species population, increasing species survival (Sulatn, 2000). By understanding what factors predict the seed production/count of a plant, we may better understand how to maintain and restore plant species and ecosystems. Our analysis is particularly interested in how seed count varies based on shrubification (treatment), plant species, and the number of inflorescence on a plant, as well as exploring if these factor represent the simplest model to predict seed count. We will be testing the null hypothesis that shrubification (treatment), species, and number of inflorescence does not predict seed count, with the alternative hypothesis that at least one of these variables does predict seed count.  
 
+# Methods
 
+To conduct this study, five alpine species were sampled from 12 pairs of plots, each pair having either an open plot or shrub treatment. Samples were collected in the form of dried buds that were then crushed and the viable seeds were counted and weighed. The individual plants that each dried bud came from was cataloged along with its species and other characteristics to form the data set. To organize the data in a clear fashion, more informative labels were given to each column and only seed count, species, treatment, and total number of inflorescenses data were kept.
+```{r}
+#read in libraries
+library(tidyverse)
+library(here)
+library(janitor)
+library(ggeffects)
+library(performance)
+library(naniar) 
+library(flextable) 
+library(car)
+library(broom)
+library(corrplot)
+library(AICcmodavg)
+library(GGally)
+library(MuMIn)
+#read in data
+seed <- read_csv(here("data", "shrubstudy_seed_ctwt.ms.data.csv")) %>% 
+  #making column names cleaner
+  clean_names() %>% 
+  #only keeping columns needed
+  select(treatment, species, total_nr_infl, nr_seeds)
+  
+```
+Based on this new data set, a visualization of missing data was created which showed that there were over 100 missing observations for seed count. 
+```{r}
+#visualizing the missing data
+gg_miss_var(seed)
+```
+** Figure 4. Missing Data Visualization** Each column is displayed on the y-axis with the number of missing variables on the x-axis, displaying that the column for number of seeds has missing data.
 
+Since the visualization indicated missing data within the data set which could interfere with our analysis, we removed all observations with missing data by creating a subset of data.
+```{r}
+#creating a subset of the data frame without missing values
+seed_subset <- seed %>% 
+  drop_na(nr_seeds)
+```
+To explore relationships between predictor variables in our new data set, we created a pairs plot rather than a Pearson's r correlation plot because two out of the three predictors are categorical. Based on the plot, none of the predictor variables appear to have a strong relationship with another that could induce colinearity. 
+```{r}
+#using data subset
+seed_subset %>% 
+  #selecting all variables
+  select(treatment: total_nr_infl) %>% 
+  #creating plot
+  ggpairs()
+```
+**Figure 5: Relationships Between Predictor Variables** Each plot in the grid compares two predictor variables on the x and y axis and creates a visualization.
+
+Now that the data has been organized, clean from missing values, and explored we can now create null and full models to predict seed count and use for analysis. The null model includes no predictors for seed count, whereas the full model will include all three predictor variables and will later be used to assess how seed count varies for each predictor. 
+```{r}
+#creating models for both null and full
+null <- lm(nr_seeds ~ 1, data = seed_subset)
+full <- lm(nr_seeds ~ species + treatment + total_nr_infl, data = seed_subset)
+```
 
 
 
@@ -223,7 +277,10 @@ Guo, Qinfeng. “Effects of Bannertail Kangaroo Rat Mounds on Small-Scale Plant 
 
 Moorhead, D. L., et al. “Cover of Spring Annuals on Nitrogen-Rich Kangaroo Rat Mounds in a Chihuahuan Desert Grassland.” American Midland Naturalist, vol. 120, no. 2, 1988, p. 443, https://doi.org/10.2307/2426018. 
 
-[4] actual paper
-[5]Phenotypic plasticity for plant development, function and life history
-[6] https://bsapubs.onlinelibrary.wiley.com/doi/epdf/10.2307/2446624?src=getftr
-[7] https://www.annualreviews.org/doi/pdf/10.1146/annurev.es.18.110187.002205
+Seaver, M. 2022. Individual and community flowering phenology, seed counts and pollinator visitation rates in shrub and open plots across Niwot Ridge, 2019 - 2021. ver 1. Environmental Data Initiative. https://doi.org/10.6073/pasta/edc4ab2faf7dd96cd1deac1544d5f2b9 (Accessed 2023-06-10).
+
+Sultan, Sonia E. “Phenotypic Plasticity for Plant Development, Function and Life History.” Trends in Plant Science, vol. 5, no. 12, 2000, pp. 537–542, https://doi.org/10.1016/s1360-1385(00)01797-0. 
+
+Lacey, Elizabeth P., et al. “Parental Effects on Seed Mass: Seed Coat but Not Embryo/Endosperm Effects.” American Journal of Botany, vol. 84, no. 11, 1997, pp. 1617–1620, https://doi.org/10.2307/2446624. 
+
+Primack, Richard B. “Relationships among Flowers, Fruits, and Seeds.” Annual Review of Ecology and Systematics, vol. 18, no. 1, 1987, pp. 409–430, https://doi.org/10.1146/annurev.es.18.110187.002205. 
