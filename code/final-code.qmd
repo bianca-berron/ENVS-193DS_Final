@@ -57,6 +57,7 @@ Next, a visualization of the missing data were created which showed there were n
 ```{r}
 gg_miss_var(kangaroo_data)
 ```
+
 **Figure 1: Missing Data.** Number of missing data entries on the x-axis and variables on the y-axis. Plots correspond to number of missing data entries for each variable.
 
 To determine whether seed numbers differ between kangaroo rat mound locations an ANOVA test was conducted. First the assumptions for this test were checked including normality and variance.
@@ -150,8 +151,8 @@ mound_I_qq <- ggplot(data = mound_I, aes(sample = seed_count)) +
 # put all the plots together using the "patchwork" feature
 (mound_B_hist + mound_B_qq) / (mound_D_hist + mound_D_qq) / (mound_E_hist + mound_E_qq) / (mound_I_hist + mound_I_qq)
 ```
-**Figure 2. Visual checks for normality.** Histograms of seed counts for each mound location. Bars represent number of seed counts in each bin. QQ plots of seed count. Points in QQ plot represent sample quantiles compared to theoretical quantiles from a normal distribution. Solid blue lines represent a 1:1 relationship between sample and theoretical quantiles. 
 
+**Figure 2. Visual checks for normality.** Histograms of seed counts for each mound location. Bars represent number of seed counts in each bin. QQ plots of seed count. Points in QQ plot represent sample quantiles compared to theoretical quantiles from a normal distribution. Solid blue lines represent a 1:1 relationship between sample and theoretical quantiles.
 
 ```{r shapiro-test}
 # shapiro tests to statistically test for normal distribution
@@ -168,7 +169,7 @@ count_var <- leveneTest(seed_count ~ microhabitat, data = kangaroo_data)
 count_var
 ```
 
-Prior to our analysis, we checked assumptions for analysis of variance. We tested for equality of variances between groups using Levene's test and found statistically significant differences in variances between groups (F(3, 1556) = 14.47, p < 0.0001, a = 0.05). We also visually assessed normality using histograms and QQ plots and statistically tested for normality of seed count using Shapiro-Wilk tests for each mound. All mounds indicated deviations from normality (mound B: W = 0.27, p < 0.0001, mound D: W = 0.28, p < 0.0001, mound E: W = 0.34, p < 0.0001, mound I: W = 0.46, p < 0.0001). Because of this, a Kruskal-Wallis test was run, as it is a non-parametric alternative to the ANOVA that does not need to meet required assumptions.
+Prior to our analysis, we checked assumptions for analysis of variance. We tested for equality of variances between groups using Levene's test and found statistically significant differences in variances between groups (F(3, 1556) = 14.47, p \< 0.0001, a = 0.05). We also visually assessed normality using histograms and QQ plots and statistically tested for normality of seed count using Shapiro-Wilk tests for each mound. All mounds indicated deviations from normality (mound B: W = 0.27, p \< 0.0001, mound D: W = 0.28, p \< 0.0001, mound E: W = 0.34, p \< 0.0001, mound I: W = 0.46, p \< 0.0001). Because of this, a Kruskal-Wallis test was run, as it is a non-parametric alternative to the ANOVA that does not need to meet required assumptions.
 
 ```{r}
 kruskal.test(seed_count ~ microhabitat, data = kangaroo_data)
@@ -184,7 +185,7 @@ pairwise.wilcox.test(kangaroo_data$seed_count, kangaroo_data$microhabitat, p.adj
 
 # Results
 
-Based on the Kruskal-Wallis test run, we found that total seed number does differ between kangaroo rat mound locations (*H*(3) = 21.93, p < 0.0001). Pairwise comparisons using the Wilcoxon rank sum test with BH-adjusted p-values was run to compare the total seed counts between mound locations. This revealed that total seed count only differs between B and I (p < 0.0001), D and I ( p = 0.0026), and E and I mound locations (p = 0.0026), where B = base of kangaroo rat mound on mound, I = interspace between black grama grass clumps off mound, D = surrounding area of kangaroo rat mound on mound, and E = edge of black grama grass clumps off mound.
+Based on the Kruskal-Wallis test run, we found that total seed number does differ between kangaroo rat mound locations (*H*(3) = 21.93, p \< 0.0001). Pairwise comparisons using the Wilcoxon rank sum test with BH-adjusted p-values was run to compare the total seed counts between mound locations. This revealed that total seed count only differs between B and I (p \< 0.0001), D and I ( p = 0.0026), and E and I mound locations (p = 0.0026), where B = base of kangaroo rat mound on mound, I = interspace between black grama grass clumps off mound, D = surrounding area of kangaroo rat mound on mound, and E = edge of black grama grass clumps off mound.
 
 ```{r}
 # create visualization to show differing seed counts by mound location
@@ -198,19 +199,22 @@ ggplot(data = kangaroo_data, aes(x = microhabitat,y = seed_count)) +
   theme(
   text = element_text(family = "Times New Roman")  
   )
-``` 
-**Figure 3. Seed Count across Mound Locations.** Mound location on x-axis and seed count on y-axis. Each mound location is represented with a different color where B (base of mound) is red, D (surrounding area) is green, E (edge of black grama grass clumps) is blue, and I (interspace between black grama glass clumps) is purple. Heights of bars represent total seed count at each location. 
+```
 
-The above figure displays how seed count does vary across mound locations, specifically between B and I, D and I, as well as E and I. 
+**Figure 3. Seed Count across Mound Locations.** Mound location on x-axis and seed count on y-axis. Each mound location is represented with a different color where B (base of mound) is red, D (surrounding area) is green, E (edge of black grama grass clumps) is blue, and I (interspace between black grama glass clumps) is purple. Heights of bars represent total seed count at each location.
+
+The above figure displays how seed count does vary across mound locations, specifically between B and I, D and I, as well as E and I.
 
 # Problem 2
 
 # Introduction
-As the climate continues to change from anthropogenic induced emissions, environmental conditions that determine ecosystem composition alter. In Niwot Ridge, Colorado environmental conditions have began to drift from the status quo due to alterations in temperature, soil moisture, and precipitation (Seaver, 2022). The new state of the environment has made it particularly hospitable for woody shrub establishment, altering the composition of the entire ecosystem to an alpine ecosystem. This phenomena is known as shrubification and could affect the success, and failure, of the different native plant species. Environmental changes that a parrental plant experiences can directly affect their output of seed quantity and the relative seed quality, i.e. seed coat thickness and structure which can influence endosperm reserves for an embryo (Sultan, 2000; Lacey et. al. 1997). The greater number of seeds produced is suggested to greatly improve an organisms fitness as it has a greater chance of successful reproduction (Primack, 1987). Moreover, an increase in seed number also increases the genetic diversity within that species population, increasing species survival (Sulatn, 2000). By understanding what factors predict the seed production/count of a plant, we may better understand how to maintain and restore plant species and ecosystems. Our analysis is particularly interested in how seed count varies based on shrubification (treatment), plant species, and the number of inflorescence on a plant, as well as exploring if these factor represent the simplest model to predict seed count. We will be testing the null hypothesis that there is no significant relationship between shrubification (treatment), species, and number of inflorescence as predictors with seed count, with the alternative hypothesis that at least one of these variables does have a significant relationship to explain seed count.  
+
+As the climate continues to change from anthropogenic induced emissions, environmental conditions that determine ecosystem composition alter. In Niwot Ridge, Colorado environmental conditions have began to drift from the status quo due to alterations in temperature, soil moisture, and precipitation (Seaver, 2022). The new state of the environment has made it particularly hospitable for woody shrub establishment, altering the composition of the entire ecosystem to an alpine ecosystem. This phenomena is known as shrubification and could affect the success, and failure, of the different native plant species. Environmental changes that a parrental plant experiences can directly affect their output of seed quantity and the relative seed quality, i.e. seed coat thickness and structure which can influence endosperm reserves for an embryo (Sultan, 2000; Lacey et. al. 1997). The greater number of seeds produced is suggested to greatly improve an organisms fitness as it has a greater chance of successful reproduction (Primack, 1987). Moreover, an increase in seed number also increases the genetic diversity within that species population, increasing species survival (Sulatn, 2000). By understanding what factors predict the seed production/count of a plant, we may better understand how to maintain and restore plant species and ecosystems. Our analysis is particularly interested in how seed count varies based on shrubification (treatment), plant species, and the number of inflorescence on a plant, as well as exploring if these factor represent the simplest model to predict seed count. We will be testing the null hypothesis that there is no significant relationship between shrubification (treatment), species, and number of inflorescence as predictors with seed count, with the alternative hypothesis that at least one of these variables does have a significant relationship to explain seed count.
 
 # Methods
 
 To conduct this study, five alpine species were sampled from 12 pairs of plots, each pair having either an open plot or shrub treatment. Samples were collected in the form of dried buds that were then crushed and the viable seeds were counted and weighed. The individual plants that each dried bud came from was cataloged along with its species and other characteristics to form the data set. To organize the data in a clear fashion, more informative labels were given to each column and only seed count, species, treatment, and total number of inflorescenses data were kept.
+
 ```{r}
 #read in libraries
 # model packages
@@ -238,32 +242,42 @@ seed <- read_csv(here("data", "shrubstudy_seed_ctwt.ms.data.csv")) %>%
   select(treatment, species, total_nr_infl, nr_seeds)
   
 ```
+
 Next to get acquainted with the data, we created a histogram of seed count:
+
 ```{r}
 ggplot(seed, aes(x = nr_seeds)) +
   geom_histogram(bins = 17)
 ```
+
 **Figure 4. Histogram of Seed Count** Seed count is represented on the x axis and frequency or count is on the y axis.
 
-This visualization demonstrated the grouping of data, specifically that count tends to be less than 50 throughout the data set. Next, a visualization of missing data was created which showed that there were over 100 missing observations for seed count. 
+This visualization demonstrated the grouping of data, specifically that count tends to be less than 50 throughout the data set. Next, a visualization of missing data was created which showed that there were over 100 missing observations for seed count.
+
 ```{r}
 #visualizing the missing data
 gg_miss_var(seed)
 ```
-** Figure 5. Missing Data Visualization** Each column is displayed on the y-axis with the number of missing variables on the x-axis, displaying that the column for number of seeds has missing data.
+
+\*\* Figure 5. Missing Data Visualization\*\* Each column is displayed on the y-axis with the number of missing variables on the x-axis, displaying that the column for number of seeds has missing data.
 
 Since the visualization indicated missing data within the data set which could interfere with our analysis, we removed all observations with missing data by creating a subset of data.
+
 ```{r}
 #creating a subset of the data frame without missing values
 seed_subset <- seed %>% 
   drop_na(nr_seeds)
 ```
+
 With this new data set, we further explored each variable by using the skim function.
+
 ```{r}
 #skimming the data frame
 skim(seed_subset)
 ```
-This summary reiterated that both treatment and species are categorical predictors, whereas total number of inflorescence is numerical. Additionally, the function presented mean values for each variable across the entire data frame. To explore relationships between predictor variables we created a pairs plot rather than a Pearson's r correlation plot because of the categorical predictors. Based on the plot, none of the predictor variables appear to have a strong relationship with another that could induce colinearity. 
+
+This summary reiterated that both treatment and species are categorical predictors, whereas total number of inflorescence is numerical. Additionally, the function presented mean values for each variable across the entire data frame. To explore relationships between predictor variables we created a pairs plot rather than a Pearson's r correlation plot because of the categorical predictors. Based on the plot, none of the predictor variables appear to have a strong relationship with another that could induce colinearity.
+
 ```{r}
 #using data subset
 seed_subset %>% 
@@ -272,9 +286,11 @@ seed_subset %>%
   #creating plot
   ggpairs()
 ```
+
 **Figure 6. Relationships Between Predictor Variables** Each plot in the grid compares two predictor variables on the x and y axis and creates a visualization.
 
-Since the data has been organized, clean from missing values, and explored we began to address our question of how does seed count vary with plot type(treatment), plant species, and total number of inflorescence and furthermore determine the most accurate and simplest model that can explain seed count. This was done first by creating a series of generalized linear models with different distributions. 
+Since the data has been organized, clean from missing values, and explored we began to address our question of how does seed count vary with plot type(treatment), plant species, and total number of inflorescence and furthermore determine the most accurate and simplest model that can explain seed count. This was done first by creating a series of generalized linear models with different distributions.
+
 ```{r}
 #creating a linear model
 seed1 <- lm(nr_seeds ~ treatment + species + total_nr_infl, data = seed_subset)
@@ -284,7 +300,9 @@ seed2 <- glm(nr_seeds ~ treatment + species + total_nr_infl, data = seed_subset,
 seed3 <- glm.nb(nr_seeds ~ treatment + species + total_nr_infl, data = seed_subset)
 
 ```
+
 We then checked the assumptions of generalized linear models visually by looking for randomly distributed residuals and normality.
+
 ```{r}
 #| fig.height: 6
 #| fig.width: 8
@@ -292,9 +310,11 @@ We then checked the assumptions of generalized linear models visually by looking
 # check diagnostics of first model which is a linear regression
 plot(simulateResiduals(seed1))
 ```
+
 **Figure 7. Linear Model Diagnostics** The left plot displays normality of data and the right displays randomness of residuals.
 
 Based on the visualization, the linear model does not conform to the data as it is not normally distributed and is not homoscedastic. We next checked the second model, a generalized linear model with a poisson distribution.
+
 ```{r}
 #| fig.height: 6
 #| fig.width: 8
@@ -302,9 +322,11 @@ Based on the visualization, the linear model does not conform to the data as it 
 #check diagnostics of second model
 plot(simulateResiduals(seed2))
 ```
+
 **Figure 8. Generalized Linear Model 2 Diagnostics** The left plot displays normality of data and the right displays randomness of residuals.
 
 Again, the visualization indicates that the data is not normally distributed and is not homoscedastic. We then tried the third model, a generalized linear model with a negative binomial distribution.
+
 ```{r}
 #| fig.height: 6
 #| fig.width: 8
@@ -312,14 +334,18 @@ Again, the visualization indicates that the data is not normally distributed and
 #check diagnostics of the third model
 plot(simulateResiduals(seed3))
 ```
+
 **Figure 9. Generalized Linear Model 3 Diagnostics** The left plot displays normality of data and the right displays randomness of residuals.
 
-This visualization displayed the most normally distributed data with residuals that were randomly dispersed evenly. To confidently determine the best model to use, we will used Akaike’s Information Criterion (AIC) values. AIC factor in both the predictability and complexity of each model, reporting the lowest AIC value to the model which predicts the most about seed count in the simplest way. This model was the generalized linear model (GLM) with the negative binomial distribution, model 3.
+This visualization displayed the most normally distributed data with residuals that were randomly dispersed evenly. To confidently determine the best model to use, we will used Akaike's Information Criterion (AIC) values. AIC factor in both the predictability and complexity of each model, reporting the lowest AIC value to the model which predicts the most about seed count in the simplest way. This model was the generalized linear model (GLM) with the negative binomial distribution, model 3.
+
 ```{r}
 #selecting best model based on AIC value
 model.sel(seed1, seed2, seed3)
 ```
+
 Next, since we are confident in using the GLM with a negative binomial we then explored other models with fewer predictors that fit this same form.
+
 ```{r}
 #creating models with only treatment and infl as predictors
 seed3_a <- glm.nb(nr_seeds ~ treatment + total_nr_infl, data = seed_subset)
@@ -329,19 +355,115 @@ seed3_b <- glm.nb(nr_seeds ~ treatment + species, data = seed_subset)
 seed3_c <- glm.nb(nr_seeds ~ species + total_nr_infl, data = seed_subset)
 ```
 
+All of these models were checked visually to meet the required assumptions.
+
+```{r}
+#| fig.height: 6
+#| fig.width: 8
+#| fig.align: center
+simulateResiduals(seed3_a, plot = TRUE)
+
+```
+
+**Figure 10. Generalized Linear Model 3.a Diagnostics** The left plot displays normality of data and the right displays randomness of residuals.
+
+The plot appeared to be homoscedastic and uniform.
+
+```{r}
+#| fig.height: 6
+#| fig.width: 8
+#| fig.align: center
+simulateResiduals(seed3_b, plot = TRUE)
+```
+
+**Figure 11. Generalized Linear Model 3.b Diagnostics** The left plot displays normality of data and the right displays randomness of residuals.
+
+The plot appeared to be extremely uniform and homoscedastic.
+
+```{r}
+#| fig.height: 6
+#| fig.width: 8
+#| fig.align: center
+simulateResiduals(seed3_c, plot = TRUE)
+```
+
+**Figure 12. Generalized Linear Model 3.c Diagnostics** The left plot displays normality of data and the right displays randomness of residuals.
+
+The plot appeared to be relatively uniform and homoscedastic. We then compared all of the generalized linear models with negative binomial distributions with each other using AIC and found model 3b to be the lowest which only has predictor variables treatment and species.
+
+```{r}
+#comparing all negative binomial glms
+model.sel(seed3, seed3_a, seed3_b, seed3_c)
+```
+
+# Results
+
+We found that model 3b which used treatment and species as predictor variables for seed count to be the most suitable. This model was chosen because it met all assumptions of generalized linear regression and has the lowest AIC value in comparison to all other models, implying that it best explains the response variable in the simplest way. The model summary is displayed here:
+
+```{r}
+#displaying model summary
+summary(seed3_b)
+```
+
+```{r}
+#creating table of summary
+seed3_b %>% 
+  as_flextable() %>% 
+  mutate("Pr(>|z|)" = round("Pr(>|z|)", 3)) %>% 
+    #making p values round to three decimals and only state whether they are less than .001
+    mutate("Pr(>|z|)" = case_when(
+    "Pr(>|z|)" < 0.001 ~ "< 0.001", TRUE ~ as.character("Pr(>|z|)")  
+  )) %>% 
+  # using mutate to round each column
+    mutate(across(c("Estimate", "Standard Error", "z value"), round, 3)) 
+```
+
+The model states that treatment and species (aside from "TRIDAS") have a significant relationship with seed count which is denoted by the p-value from the Z statistic for that variable. This relationship is described by estimates of coefficients that give insight into the direction and strength of the relationship. Confidence intervals for each variable in describing its relationship to seed count is shown below.
+
+```{r}
+# confidence intervals
+confint(seed3_b)
+```
+
+The coefficient of determination for the model is 0.45 with a significance level of 0.05 out of a sampling of 182 plants, indicating that 45% of variance in seed count data can be explained by this model.
+
+```{r}
+# adjusted R2
+r.squaredGLMM(seed3_b)
+```
+
+```{r}
+
+```
+
+Moreover, the model suggests that the plant species "CARRUP" or *Carex rupestris ssp. drummondiana* has a significant negative relationship, where if all else is held constant, seed count is expected decrease by -3.3 units (with a standard error of .26). This negative relationship to seed count is consistent across the majority of species and can be visualized below:
+
+```{r}
+ggplot(seed3_b, aes(x = species, y = nr_seeds, fill = treatment)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  scale_fill_manual(values = c("control" = "blue", "shrub" = "green")) +
+  scale_color_manual(values = c("control" = "blue", "shrub" = "green")) +
+  theme_bw() +
+  labs(x = "Species", y = "Seed Count", title = "Seed Count Varied by Species and Treatment", 
+    fill = "Treatment", color = "Treatment")
+```
+
+**Figure 13. Seed Count Varied by Species and Treatment** The y-axis measures seed count, the x-axis is seperated by individual plant species, and the green bars represent the shrub treatment and blue bars represent the control treatment.
+
+From the visualization it can be extrapolated that seed counts are larger for "AREFEN", "CARRUP", "GUEROS", and "KOBMYO"in the control treatment, explaining the shrub treatment's negative relationship towards seed count. Furthermore, it is apparent that seed count stays relatively similar for each treatment based on the species, with the exception of "AREFEN".
 
 # Works Cited
 
-Davidson, A.D., and D.C. Lightfoot. “Burrowing Rodents Increase Landscape Heterogeneity in a Desert Grassland.” Journal of Arid Environments, vol. 72, no. 7, 2008, pp. 1133–1145, https://doi.org/10.1016/j.jaridenv.2007.12.015. 
+Davidson, A.D., and D.C. Lightfoot. "Burrowing Rodents Increase Landscape Heterogeneity in a Desert Grassland." Journal of Arid Environments, vol. 72, no. 7, 2008, pp. 1133--1145, https://doi.org/10.1016/j.jaridenv.2007.12.015.
 
-Guo, Qinfeng. “Effects of Bannertail Kangaroo Rat Mounds on Small-Scale Plant Community Structure.” Oecologia, vol. 106, no. 2, 1996, pp. 247–256, https://doi.org/10.1007/bf00328605. 
+Guo, Qinfeng. "Effects of Bannertail Kangaroo Rat Mounds on Small-Scale Plant Community Structure." Oecologia, vol. 106, no. 2, 1996, pp. 247--256, https://doi.org/10.1007/bf00328605.
 
-Moorhead, D. L., et al. “Cover of Spring Annuals on Nitrogen-Rich Kangaroo Rat Mounds in a Chihuahuan Desert Grassland.” American Midland Naturalist, vol. 120, no. 2, 1988, p. 443, https://doi.org/10.2307/2426018. 
+Moorhead, D. L., et al. "Cover of Spring Annuals on Nitrogen-Rich Kangaroo Rat Mounds in a Chihuahuan Desert Grassland." American Midland Naturalist, vol. 120, no. 2, 1988, p. 443, https://doi.org/10.2307/2426018.
 
 Seaver, M. 2022. Individual and community flowering phenology, seed counts and pollinator visitation rates in shrub and open plots across Niwot Ridge, 2019 - 2021. ver 1. Environmental Data Initiative. https://doi.org/10.6073/pasta/edc4ab2faf7dd96cd1deac1544d5f2b9 (Accessed 2023-06-10).
 
-Sultan, Sonia E. “Phenotypic Plasticity for Plant Development, Function and Life History.” Trends in Plant Science, vol. 5, no. 12, 2000, pp. 537–542, https://doi.org/10.1016/s1360-1385(00)01797-0. 
+Sultan, Sonia E. "Phenotypic Plasticity for Plant Development, Function and Life History." Trends in Plant Science, vol. 5, no. 12, 2000, pp. 537--542, https://doi.org/10.1016/s1360-1385(00)01797-0.
 
-Lacey, Elizabeth P., et al. “Parental Effects on Seed Mass: Seed Coat but Not Embryo/Endosperm Effects.” American Journal of Botany, vol. 84, no. 11, 1997, pp. 1617–1620, https://doi.org/10.2307/2446624. 
+Lacey, Elizabeth P., et al. "Parental Effects on Seed Mass: Seed Coat but Not Embryo/Endosperm Effects." American Journal of Botany, vol. 84, no. 11, 1997, pp. 1617--1620, https://doi.org/10.2307/2446624.
 
-Primack, Richard B. “Relationships among Flowers, Fruits, and Seeds.” Annual Review of Ecology and Systematics, vol. 18, no. 1, 1987, pp. 409–430, https://doi.org/10.1146/annurev.es.18.110187.002205. 
+Primack, Richard B. "Relationships among Flowers, Fruits, and Seeds." Annual Review of Ecology and Systematics, vol. 18, no. 1, 1987, pp. 409--430, https://doi.org/10.1146/annurev.es.18.110187.002205.
