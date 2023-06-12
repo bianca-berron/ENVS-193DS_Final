@@ -213,7 +213,7 @@ As the climate continues to change from anthropogenic induced emissions, environ
 
 # Methods
 
-To conduct this study, five alpine species were sampled from 12 pairs of plots, each pair having either an open plot or shrub treatment. Samples were collected in the form of dried buds that were then crushed and the viable seeds were counted and weighed. The individual plants that each dried bud came from was cataloged along with its species and other characteristics to form the data set. To organize the data in a clear fashion, more informative labels were given to each column and only seed count, species, treatment, and total number of inflorescenses data were kept.
+To conduct this study, five alpine species were sampled from 12 pairs of plots, each pair having either an open plot or shrub treatment. Samples were collected in the form of dried buds that were then crushed and the viable seeds were counted and weighed. The individual plants that each dried bud came from was cataloged along with its species and other characteristics to form the data set. To organize the data in a clear fashion, more informative labels were given to each column and only seed count, species, treatment, and total number of inflorescence data were kept.
 
 ```{r}
 #read in libraries
@@ -239,8 +239,7 @@ seed <- read_csv(here("data", "shrubstudy_seed_ctwt.ms.data.csv")) %>%
   #making column names cleaner
   clean_names() %>% 
   #only keeping columns needed
-  dplyr::select(treatment, species, total_nr_infl, nr_seeds)
-  
+  select(treatment, species, total_nr_infl, nr_seeds)
   
 ```
 
@@ -260,7 +259,7 @@ This visualization demonstrated the grouping of data, specifically that count te
 gg_miss_var(seed)
 ```
 
-\*\* Figure 5. Missing Data Visualization\*\* Each column is displayed on the y-axis with the number of missing variables on the x-axis, displaying that the column for number of seeds has missing data.
+**Figure 5. Missing Data Visualization** Each column is displayed on the y-axis with the number of missing variables on the x-axis, displaying that the column for number of seeds has missing data.
 
 Since the visualization indicated missing data within the data set which could interfere with our analysis, we removed all observations with missing data by creating a subset of data.
 
@@ -406,27 +405,18 @@ We found that model 3b which used treatment and species as predictor variables f
 summary(seed3_b)
 ```
 
-
 ```{r}
-seed3_b_table <- tidy(seed3_b) %>% 
-  # making p values round to three decimals and only state whether they are less than   0.001
-  mutate(p.value = round(p.value, 3)) %>%
-  # make p.value a character to adjust column to show rounded values and p-values less than 0.001
-  mutate(p.value = case_when(
-    p.value < 0.001 ~ "<0.001", TRUE ~ as.character(p.value))) %>% 
-   # using mutate to round each column
-  mutate(across(c("estimate", "std.error", "statistic"), round, 3)) %>% 
-  flextable() %>% 
-  # edit labels
-  set_header_labels(term = "Term", 
-                      estimate = "Estimate",
-                      std.error = "Standard Error",
-                      statistic = "Z Value",
-                      p.value = "P-value")
-
-seed3_b_table
+#creating table of summary
+seed3_b %>% 
+  as_flextable() %>% 
+  mutate("Pr(>|z|)" = round("Pr(>|z|)", 3)) %>% 
+    #making p values round to three decimals and only state whether they are less than .001
+    mutate("Pr(>|z|)" = case_when(
+    "Pr(>|z|)" < 0.001 ~ "< 0.001", TRUE ~ as.character("Pr(>|z|)")  
+  )) %>% 
+  # using mutate to round each column
+    mutate(across(c("Estimate", "Standard Error", "z value"), round, 3)) 
 ```
-
 
 The model states that treatment and species (aside from "TRIDAS") have a significant relationship with seed count which is denoted by the p-value from the Z statistic for that variable. This relationship is described by estimates of coefficients that give insight into the direction and strength of the relationship. Confidence intervals for each variable in describing its relationship to seed count is shown below.
 
@@ -441,13 +431,7 @@ The coefficient of determination for the model is 0.45 with a significance level
 # adjusted R2
 r.squaredGLMM(seed3_b)
 ```
-
-```{r}
-
-```
-
 Moreover, the model suggests that the plant species "CARRUP" or *Carex rupestris ssp. drummondiana* has a significant negative relationship, where if all else is held constant, seed count is expected decrease by -3.3 units (with a standard error of .26). This negative relationship to seed count is consistent across the majority of species and can be visualized below:
-
 ```{r}
 ggplot(seed3_b, aes(x = species, y = nr_seeds, fill = treatment)) +
   geom_bar(stat = "identity", position = position_dodge()) +
